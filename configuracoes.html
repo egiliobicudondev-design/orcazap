@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Configurações — OrçaZap</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f8f6;
+            color: #13261d;
+        }
+
+        .app {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: white;
+            border-right: 1px solid #e1e9e4;
+            padding: 24px 18px;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 21px;
+            font-weight: bold;
+            color: #087f4f;
+            margin-bottom: 35px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #08a865;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .menu a {
+            display: block;
+            text-decoration: none;
+            color: #4f665b;
+            padding: 12px 13px;
+            border-radius: 9px;
+            margin-bottom: 7px;
+            font-size: 14px;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background: #e8f8ef;
+            color: #087f4f;
+            font-weight: bold;
+        }
+
+        .logout {
+            position: absolute;
+            bottom: 25px;
+            left: 18px;
+            right: 18px;
+        }
+
+        .logout button {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #dce7e1;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #a33;
+            font-weight: bold;
+        }
+
+        .content {
+            margin-left: 240px;
+            width: calc(100% - 240px);
+        }
+
+        .topbar {
+            height: 75px;
+            background: white;
+            border-bottom: 1px solid #e1e9e4;
+            padding: 0 35px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .company-name {
+            color: #5d7167;
+            font-size: 14px;
+        }
+
+        .user-email {
+            color: #718078;
+            font-size: 13px;
+        }
+
+        main {
+            max-width: 950px;
+            margin: auto;
+            padding: 35px;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 30px;
+            margin-bottom: 7px;
+        }
+
+        .page-header p {
+            color: #718078;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e0e8e3;
+            border-radius: 14px;
+            padding: 26px;
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            font-size: 18px;
+            margin-bottom: 7px;
+        }
+
+        .card-description {
+            color: #718078;
+            font-size: 13px;
+            margin-bottom: 24px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 13px;
+            border: 1px solid #d8e4dd;
+            border-radius: 8px;
+            outline: none;
+            font-size: 14px;
+            font-family: Arial, Helvetica, sans-serif;
+            background: white;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #08a865;
+            box-shadow: 0 0 0 3px rgba(8,168,101,.10);
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .logo-preview {
+            width: 105px;
+            height: 105px;
+            border-radius: 16px;
+            border: 1px solid #dbe5df;
+            background: #f6faf7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+            color: #718078;
+            font-weight: bold;
+        }
+
+        .logo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .logo-info {
+            flex: 1;
+        }
+
+        .logo-info p {
+            font-size: 12px;
+            color: #718078;
+            line-height: 1.5;
+            margin-top: 8px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 9px;
+            padding: 13px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #08a865;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #078c55;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #17352a;
+            border: 1px solid #dbe6e0;
+        }
+
+        .btn:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .message {
+            display: none;
+            padding: 13px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .message.success {
+            display: block;
+            background: #eafaf1;
+            border: 1px solid #c8eed9;
+            color: #087f4f;
+        }
+
+        .message.error {
+            display: block;
+            background: #fff1f1;
+            border: 1px solid #ffd5d5;
+            color: #b42318;
+        }
+
+        @media(max-width:900px) {
+
+            .sidebar {
+                display: none;
+            }
+
+            .content {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+
+        @media(max-width:600px) {
+
+            main {
+                padding: 22px 15px;
+            }
+
+            .topbar {
+                padding: 0 15px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .logo-area {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .actions {
+                flex-direction: column-reverse;
+            }
+
+            .actions button {
+                width: 100%;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                O
+            </div>
+
+            OrçaZap
+
+        </div>
+
+        <nav class="menu">
+
+            <a href="dashboard.html">
+                📊 Dashboard
+            </a>
+
+            <a href="clientes.html">
+                👥 Clientes
+            </a>
+
+            <a href="orcamentos.html">
+                📄 Orçamentos
+            </a>
+
+            <a href="novo-orcamento.html">
+                ➕ Novo orçamento
+            </a>
+
+            <a
+                href="configuracoes.html"
+                class="active"
+            >
+                ⚙️ Configurações
+            </a>
+
+        </nav>
+
+        <div class="logout">
+
+            <button id="logoutBtn">
+                Sair da conta
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <div class="content">
+
+        <header class="topbar">
+
+            <div
+                id="companyNameTop"
+                class="company-name"
+            >
+                Carregando empresa...
+            </div>
+
+            <div
+                id="userEmail"
+                class="user-email"
+            ></div>
+
+        </header>
+
+
+        <main>
+
+            <div class="page-header">
+
+                <h1>Configurações</h1>
+
+                <p>
+                    Personalize sua empresa e seus orçamentos.
+                </p>
+
+            </div>
+
+
+            <div
+                id="mensagem"
+                class="message"
+            ></div>
+
+
+            <form id="configForm">
+
+
+                <!-- LOGO -->
+
+                <section class="card">
+
+                    <h2>Logo da empresa</h2>
+
+                    <p class="card-description">
+                        Sua logo será usada nos seus orçamentos.
+                    </p>
+
+
+                    <div class="logo-area">
+
+                        <div
+                            class="logo-preview"
+                            id="logoPreview"
+                        >
+                            Sem logo
+                        </div>
+
+
+                        <div class="logo-info">
+
+                            <input
+                                type="file"
+                                id="logoFile"
+                                accept="image/png,image/jpeg,image/webp"
+                            >
+
+                            <p>
+                                PNG, JPG ou WEBP.
+                                Tamanho máximo: 2 MB.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- EMPRESA -->
+
+                <section class="card">
+
+                    <h2>Dados da empresa</h2>
+
+                    <p class="card-description">
+                        Essas informações identificam seu negócio.
+                    </p>
+
+
+                    <div class="grid">
+
+                        <div class="form-group">
+
+                            <label for="nome">
+                                Nome da empresa *
+                            </label>
+
+                            <input
+                                id="nome"
+                                type="text"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="telefone">
+                                WhatsApp
+                            </label>
+
+                            <input
+                                id="telefone"
+                                type="tel"
+                                placeholder="(14) 99999-9999"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="email">
+                                E-mail comercial
+                            </label>
+
+                            <input
+                                id="email"
+                                type="email"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="documento">
+                                CPF / CNPJ
+                            </label>
+
+                            <input
+                                id="documento"
+                                type="text"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="endereco">
+                            Endereço
+                        </label>
+
+                        <input
+                            id="endereco"
+                            type="text"
+                            placeholder="Rua, número, bairro, cidade..."
+                        >
+
+                    </div>
+
+                </section>
+
+
+                <!-- PAGAMENTO -->
+
+                <section class="card">
+
+                    <h2>Pagamento</h2>
+
+                    <p class="card-description">
+                        Cadastre sua chave PIX para facilitar cobranças futuramente.
+                    </p>
+
+
+                    <div class="form-group">
+
+                        <label for="pix">
+                            Chave PIX
+                        </label>
+
+                        <input
+                            id="pix"
+                            type="text"
+                            placeholder="CPF, CNPJ, telefone, e-mail ou chave aleatória"
+                        >
+
+                    </div>
+
+                </section>
+
+
+                <!-- PADRÕES -->
+
+                <section class="card">
+
+                    <h2>Padrões dos orçamentos</h2>
+
+                    <p class="card-description">
+                        Defina valores que serão utilizados nos próximos orçamentos.
+                    </p>
+
+
+                    <div class="form-group">
+
+                        <label for="validade">
+                            Validade padrão
+                        </label>
+
+                        <select id="validade">
+
+                            <option value="3">
+                                3 dias
+                            </option>
+
+                            <option value="7">
+                                7 dias
+                            </option>
+
+                            <option value="15">
+                                15 dias
+                            </option>
+
+                            <option value="30">
+                                30 dias
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="mensagemPadrao">
+                            Mensagem padrão
+                        </label>
+
+                        <textarea
+                            id="mensagemPadrao"
+                            placeholder="Ex.: Obrigado pelo contato. Qualquer dúvida sobre este orçamento, estou à disposição."
+                        ></textarea>
+
+                    </div>
+
+                </section>
+
+
+                <div class="actions">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        onclick="window.location.href='dashboard.html'"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                        id="salvarBtn"
+                    >
+                        Salvar configurações
+                    </button>
+
+                </div>
+
+            </form>
+
+        </main>
+
+    </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+    const SUPABASE_URL =
+        "https://kceprnuvyrtnmbmknnwj.supabase.co";
+
+
+    const SUPABASE_KEY =
+        "sb_publishable_aZPRlsOse9AxSJCjroHGRA_CaJlrNKo";
+
+
+    const supabaseClient =
+        supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
+
+    let userId = null;
+
+    let companyId = null;
+
+    let logoAtual = null;
+
+
+    const form =
+        document.getElementById(
+            "configForm"
+        );
+
+
+    const mensagem =
+        document.getElementById(
+            "mensagem"
+        );
+
+
+    const logoFile =
+        document.getElementById(
+            "logoFile"
+        );
+
+
+    function mostrarMensagem(
+        texto,
+        tipo
+    ) {
+
+        mensagem.textContent =
+            texto;
+
+        mensagem.className =
+            "message " + tipo;
+
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+
+    function mostrarLogo(url) {
+
+        const preview =
+            document.getElementById(
+                "logoPreview"
+            );
+
+
+        if (!url) {
+
+            preview.innerHTML =
+                "Sem logo";
+
+            return;
+        }
+
+
+        preview.innerHTML = "";
+
+
+        const imagem =
+            document.createElement(
+                "img"
+            );
+
+
+        imagem.src =
+            url;
+
+
+        imagem.alt =
+            "Logo da empresa";
+
+
+        preview.appendChild(
+            imagem
+        );
+    }
+
+
+    async function iniciarPagina() {
+
+        try {
+
+            const {
+                data: { user },
+                error: userError
+            } =
+                await supabaseClient
+                    .auth
+                    .getUser();
+
+
+            if (
+                userError ||
+                !user
+            ) {
+
+                window.location.href =
+                    "login.html";
+
+                return;
+            }
+
+
+            userId =
+                user.id;
+
+
+            document.getElementById(
+                "userEmail"
+            ).textContent =
+                user.email;
+
+
+            const {
+                data: empresa,
+                error
+            } =
+                await supabaseClient
+                    .from("companies")
+                    .select(`
+                        id,
+                        name,
+                        phone,
+                        email,
+                        document,
+                        address,
+                        pix_key,
+                        logo_url,
+                        default_message,
+                        default_validity_days
+                    `)
+                    .eq(
+                        "user_id",
+                        user.id
+                    )
+                    .maybeSingle();
+
+
+            if (error) {
+                throw error;
+            }
+
+
+            if (!empresa) {
+
+                throw new Error(
+                    "Empresa não encontrada."
+                );
+            }
+
+
+            companyId =
+                empresa.id;
+
+
+            logoAtual =
+                empresa.logo_url;
+
+
+            document.getElementById(
+                "companyNameTop"
+            ).textContent =
+                empresa.name;
+
+
+            document.getElementById(
+                "nome"
+            ).value =
+                empresa.name || "";
+
+
+            document.getElementById(
+                "telefone"
+            ).value =
+                empresa.phone || "";
+
+
+            document.getElementById(
+                "email"
+            ).value =
+                empresa.email || "";
+
+
+            document.getElementById(
+                "documento"
+            ).value =
+                empresa.document || "";
+
+
+            document.getElementById(
+                "endereco"
+            ).value =
+                empresa.address || "";
+
+
+            document.getElementById(
+                "pix"
+            ).value =
+                empresa.pix_key || "";
+
+
+            document.getElementById(
+                "mensagemPadrao"
+            ).value =
+                empresa.default_message || "";
+
+
+            document.getElementById(
+                "validade"
+            ).value =
+                String(
+                    empresa.default_validity_days || 7
+                );
+
+
+            mostrarLogo(
+                logoAtual
+            );
+
+
+        } catch(error) {
+
+            console.error(error);
+
+
+            mostrarMensagem(
+                "Erro ao carregar configurações: " +
+                error.message,
+                "error"
+            );
+        }
+    }
+
+
+    logoFile.addEventListener(
+        "change",
+        function() {
+
+            const arquivo =
+                logoFile.files[0];
+
+
+            if (!arquivo) {
+                return;
+            }
+
+
+            if (
+                arquivo.size >
+                2 * 1024 * 1024
+            ) {
+
+                alert(
+                    "A logo deve ter no máximo 2 MB."
+                );
+
+
+                logoFile.value =
+                    "";
+
+                return;
+            }
+
+
+            const tiposPermitidos = [
+                "image/png",
+                "image/jpeg",
+                "image/webp"
+            ];
+
+
+            if (
+                !tiposPermitidos.includes(
+                    arquivo.type
+                )
+            ) {
+
+                alert(
+                    "Use uma imagem PNG, JPG ou WEBP."
+                );
+
+
+                logoFile.value =
+                    "";
+
+                return;
+            }
+
+
+            const leitor =
+                new FileReader();
+
+
+            leitor.onload =
+                function(event) {
+
+                    mostrarLogo(
+                        event.target.result
+                    );
+                };
+
+
+            leitor.readAsDataURL(
+                arquivo
+            );
+        }
+    );
+
+
+    async function enviarLogo() {
+
+        const arquivo =
+            logoFile.files[0];
+
+
+        if (!arquivo) {
+
+            return logoAtual;
+        }
+
+
+        const extensao =
+            arquivo.name
+                .split(".")
+                .pop()
+                .toLowerCase();
+
+
+        const nomeArquivo =
+            Date.now() +
+            "-" +
+            Math.random()
+                .toString(36)
+                .substring(2, 10) +
+            "." +
+            extensao;
+
+
+        const caminho =
+            userId +
+            "/" +
+            nomeArquivo;
+
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .storage
+                .from(
+                    "company-logos"
+                )
+                .upload(
+                    caminho,
+                    arquivo,
+                    {
+                        cacheControl:
+                            "3600",
+
+                        upsert:
+                            false,
+
+                        contentType:
+                            arquivo.type
+                    }
+                );
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        const {
+            data
+        } =
+            supabaseClient
+                .storage
+                .from(
+                    "company-logos"
+                )
+                .getPublicUrl(
+                    caminho
+                );
+
+
+        return data.publicUrl;
+    }
+
+
+    form.addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            const botao =
+                document.getElementById(
+                    "salvarBtn"
+                );
+
+
+            botao.disabled =
+                true;
+
+
+            botao.textContent =
+                "Salvando...";
+
+
+            try {
+
+                const nome =
+                    document.getElementById(
+                        "nome"
+                    ).value.trim();
+
+
+                if (!nome) {
+
+                    throw new Error(
+                        "Digite o nome da empresa."
+                    );
+                }
+
+
+                const novaLogo =
+                    await enviarLogo();
+
+
+                const {
+                    error
+                } =
+                    await supabaseClient
+                        .from(
+                            "companies"
+                        )
+                        .update({
+
+                            name:
+                                nome,
+
+                            phone:
+                                document.getElementById(
+                                    "telefone"
+                                ).value.trim() || null,
+
+                            email:
+                                document.getElementById(
+                                    "email"
+                                ).value.trim() || null,
+
+                            document:
+                                document.getElementById(
+                                    "documento"
+                                ).value.trim() || null,
+
+                            address:
+                                document.getElementById(
+                                    "endereco"
+                                ).value.trim() || null,
+
+                            pix_key:
+                                document.getElementById(
+                                    "pix"
+                                ).value.trim() || null,
+
+                            logo_url:
+                                novaLogo || null,
+
+                            default_message:
+                                document.getElementById(
+                                    "mensagemPadrao"
+                                ).value.trim() || null,
+
+                            default_validity_days:
+                                Number(
+                                    document.getElementById(
+                                        "validade"
+                                    ).value
+                                ),
+
+                            updated_at:
+                                new Date()
+                                    .toISOString()
+
+                        })
+                        .eq(
+                            "id",
+                            companyId
+                        )
+                        .eq(
+                            "user_id",
+                            userId
+                        );
+
+
+                if (error) {
+                    throw error;
+                }
+
+
+                logoAtual =
+                    novaLogo;
+
+
+                logoFile.value =
+                    "";
+
+
+                document.getElementById(
+                    "companyNameTop"
+                ).textContent =
+                    nome;
+
+
+                mostrarLogo(
+                    logoAtual
+                );
+
+
+                mostrarMensagem(
+                    "Configurações salvas com sucesso!",
+                    "success"
+                );
+
+
+            } catch(error) {
+
+                console.error(error);
+
+
+                mostrarMensagem(
+                    "Não foi possível salvar: " +
+                    error.message,
+                    "error"
+                );
+
+
+            } finally {
+
+                botao.disabled =
+                    false;
+
+
+                botao.textContent =
+                    "Salvar configurações";
+            }
+        }
+    );
+
+
+    document.getElementById(
+        "logoutBtn"
+    ).addEventListener(
+        "click",
+        async function() {
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+
+            window.location.href =
+                "login.html";
+        }
+    );
+
+
+    iniciarPagina();
+
+</script>
+
+
+</body>
+
+</html>
