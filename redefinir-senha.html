@@ -10,9 +10,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>
-        Criar nova senha — OrçaZap
-    </title>
+    <title>Criar nova senha — OrçaZap</title>
 
     <style>
 
@@ -24,9 +22,7 @@
 
         body {
             font-family: Arial, Helvetica, sans-serif;
-
             background: #f5f8f6;
-
             color: #13261d;
 
             min-height: 100vh;
@@ -65,7 +61,6 @@
             border-radius: 50%;
 
             background: #08a865;
-
             color: white;
 
             display: flex;
@@ -91,9 +86,7 @@
 
         h1 {
             font-size: 25px;
-
             margin-bottom: 9px;
-
             text-align: center;
         }
 
@@ -111,10 +104,9 @@
 
         .loading {
             text-align: center;
-
             color: #718078;
-
             padding: 20px 0;
+            font-size: 14px;
         }
 
         #senhaArea {
@@ -276,9 +268,7 @@
 
 
         <p class="description">
-
             Escolha uma nova senha para acessar sua conta.
-
         </p>
 
 
@@ -292,9 +282,7 @@
             id="carregando"
             class="loading"
         >
-
             Verificando link de recuperação...
-
         </div>
 
 
@@ -307,9 +295,7 @@
                 <div class="form-group">
 
                     <label for="novaSenha">
-
                         Nova senha
-
                     </label>
 
 
@@ -324,9 +310,7 @@
 
 
                     <div class="password-info">
-
                         Use pelo menos 8 caracteres.
-
                     </div>
 
                 </div>
@@ -335,9 +319,7 @@
                 <div class="form-group">
 
                     <label for="confirmarSenha">
-
                         Confirmar nova senha
-
                     </label>
 
 
@@ -358,9 +340,7 @@
                     class="btn"
                     id="salvarBtn"
                 >
-
                     Salvar nova senha
-
                 </button>
 
 
@@ -373,9 +353,7 @@
         <div class="back">
 
             <a href="login.html">
-
                 ← Voltar para o login
-
             </a>
 
         </div>
@@ -387,28 +365,39 @@
 </div>
 
 
-<script
-    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
-></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
 <script>
 
+    /* =========================================
+       SUPABASE
+    ========================================= */
 
     const SUPABASE_URL =
         "https://kceprnuvyrtnmbmknnwj.supabase.co";
 
 
     const SUPABASE_KEY =
-        "COLE_AQUI_A_MESMA_SB_PUBLISHABLE";
+        "sb_publishable_aZPRlsOse9AxSJCjroHGRA_CaJlrNKo";
 
 
     const supabaseClient =
         supabase.createClient(
             SUPABASE_URL,
-            SUPABASE_KEY
+            SUPABASE_KEY,
+            {
+                auth: {
+                    detectSessionInUrl: true,
+                    persistSession: true
+                }
+            }
         );
 
+
+    /* =========================================
+       ELEMENTOS
+    ========================================= */
 
     const mensagem =
         document.getElementById(
@@ -438,6 +427,10 @@
         false;
 
 
+    /* =========================================
+       MENSAGENS
+    ========================================= */
+
     function mostrarMensagem(
         texto,
         tipo
@@ -454,7 +447,6 @@
 
     function liberarFormulario() {
 
-
         podeAlterarSenha =
             true;
 
@@ -466,11 +458,19 @@
         senhaArea.style.display =
             "block";
 
+
+        mensagem.className =
+            "message";
+
+
+        mensagem.textContent =
+            "";
     }
 
 
-    function mostrarLinkInvalido() {
-
+    function mostrarLinkInvalido(
+        detalhe = ""
+    ) {
 
         podeAlterarSenha =
             false;
@@ -484,21 +484,285 @@
             "none";
 
 
+        let texto =
+            "O link de recuperação é inválido ou expirou. Solicite um novo link.";
+
+
+        if (detalhe) {
+
+            console.error(
+                "Detalhe recuperação:",
+                detalhe
+            );
+        }
+
+
         mostrarMensagem(
-
-            "O link de recuperação é inválido ou expirou. Solicite um novo link.",
-
+            texto,
             "error"
-
         );
-
     }
 
 
-    /* ======================================
-       ESCUTA RECUPERAÇÃO DE SENHA
-    ====================================== */
+    /* =========================================
+       PROCESSAR LINK
+    ========================================= */
 
+    async function processarLinkRecuperacao() {
+
+        try {
+
+            /*
+                1 - VERIFICA ERRO NA URL
+            */
+
+            const query =
+                new URLSearchParams(
+                    window.location.search
+                );
+
+
+            const erroQuery =
+                query.get(
+                    "error_description"
+                );
+
+
+            const hash =
+                new URLSearchParams(
+                    window.location.hash
+                        .replace("#", "")
+                );
+
+
+            const erroHash =
+                hash.get(
+                    "error_description"
+                );
+
+
+            if (
+                erroQuery ||
+                erroHash
+            ) {
+
+                mostrarLinkInvalido(
+                    erroQuery ||
+                    erroHash
+                );
+
+
+                return;
+            }
+
+
+            /*
+                2 - FLUXO PKCE
+
+                Se voltar com:
+                ?code=xxxxx
+            */
+
+            const code =
+                query.get(
+                    "code"
+                );
+
+
+            if (code) {
+
+                const {
+                    data,
+                    error
+                } =
+                    await supabaseClient
+                        .auth
+                        .exchangeCodeForSession(
+                            code
+                        );
+
+
+                if (error) {
+
+                    throw error;
+                }
+
+
+                if (
+                    data &&
+                    data.session
+                ) {
+
+                    liberarFormulario();
+
+
+                    limparURL();
+
+
+                    return;
+                }
+            }
+
+
+            /*
+                3 - FLUXO IMPLICIT
+
+                Se voltar com:
+                #access_token=...
+                &refresh_token=...
+            */
+
+            const accessToken =
+                hash.get(
+                    "access_token"
+                );
+
+
+            const refreshToken =
+                hash.get(
+                    "refresh_token"
+                );
+
+
+            if (
+                accessToken &&
+                refreshToken
+            ) {
+
+                const {
+                    data,
+                    error
+                } =
+                    await supabaseClient
+                        .auth
+                        .setSession({
+
+                            access_token:
+                                accessToken,
+
+                            refresh_token:
+                                refreshToken
+
+                        });
+
+
+                if (error) {
+
+                    throw error;
+                }
+
+
+                if (
+                    data &&
+                    data.session
+                ) {
+
+                    liberarFormulario();
+
+
+                    limparURL();
+
+
+                    return;
+                }
+            }
+
+
+            /*
+                4 - TALVEZ O SUPABASE
+                JÁ TENHA PROCESSADO A URL
+            */
+
+            await new Promise(
+                function(resolve) {
+
+                    setTimeout(
+                        resolve,
+                        500
+                    );
+
+                }
+            );
+
+
+            const {
+                data: sessionData,
+                error: sessionError
+            } =
+                await supabaseClient
+                    .auth
+                    .getSession();
+
+
+            if (sessionError) {
+
+                throw sessionError;
+            }
+
+
+            if (
+                sessionData &&
+                sessionData.session
+            ) {
+
+                liberarFormulario();
+
+
+                limparURL();
+
+
+                return;
+            }
+
+
+            /*
+                SE CHEGOU AQUI,
+                NÃO FOI POSSÍVEL CRIAR SESSÃO
+            */
+
+            mostrarLinkInvalido(
+                "Nenhuma sessão de recuperação encontrada."
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Erro ao processar recuperação:",
+                error
+            );
+
+
+            mostrarLinkInvalido(
+                error.message
+            );
+        }
+    }
+
+
+    /* =========================================
+       LIMPAR TOKEN DA BARRA DO NAVEGADOR
+    ========================================= */
+
+    function limparURL() {
+
+        if (
+            window.history &&
+            window.history.replaceState
+        ) {
+
+            window.history.replaceState(
+                {},
+                document.title,
+                window.location.pathname
+            );
+        }
+    }
+
+
+    /* =========================================
+       EVENTOS DO SUPABASE
+    ========================================= */
 
     supabaseClient
         .auth
@@ -508,147 +772,30 @@
                 session
             ) {
 
-
                 console.log(
-                    "Evento Auth:",
+                    "Auth:",
                     event
                 );
 
 
                 if (
                     event ===
-                    "PASSWORD_RECOVERY"
-                ) {
-
-
-                    liberarFormulario();
-
-                }
-
-
-                if (
-                    event ===
-                    "SIGNED_IN" &&
+                    "PASSWORD_RECOVERY" &&
                     session
                 ) {
 
-
                     liberarFormulario();
 
-                }
 
+                    limparURL();
+                }
             }
         );
 
 
-    /* ======================================
-       VERIFICA SE A SESSÃO FOI CRIADA
-    ====================================== */
-
-
-    async function verificarRecuperacao() {
-
-
-        try {
-
-
-            const hash =
-                window.location.hash;
-
-
-            const parametros =
-                new URLSearchParams(
-                    hash.startsWith("#")
-                        ? hash.substring(1)
-                        : hash
-                );
-
-
-            const erroURL =
-                parametros.get(
-                    "error_description"
-                );
-
-
-            if (erroURL) {
-
-
-                mostrarLinkInvalido();
-
-
-                return;
-
-            }
-
-
-            /*
-                Aguarda o Supabase processar
-                os dados que vieram no link.
-            */
-
-
-            await new Promise(
-                function(resolve) {
-
-                    setTimeout(
-                        resolve,
-                        600
-                    );
-
-                }
-            );
-
-
-            const {
-                data,
-                error
-            } =
-                await supabaseClient
-                    .auth
-                    .getSession();
-
-
-            if (error) {
-
-                throw error;
-            }
-
-
-            if (
-                data.session
-            ) {
-
-
-                liberarFormulario();
-
-
-            } else {
-
-
-                mostrarLinkInvalido();
-
-            }
-
-
-        } catch (error) {
-
-
-            console.error(
-                error
-            );
-
-
-            mostrarLinkInvalido();
-
-        }
-
-    }
-
-
-    /* ======================================
-       SALVAR SENHA
-    ====================================== */
-
+    /* =========================================
+       SALVAR NOVA SENHA
+    ========================================= */
 
     document.getElementById(
         "senhaForm"
@@ -656,22 +803,21 @@
         "submit",
         async function(event) {
 
-
             event.preventDefault();
 
 
-            if (!podeAlterarSenha) {
+            if (
+                !podeAlterarSenha
+            ) {
+
+                mostrarMensagem(
+                    "O link de recuperação não está mais válido.",
+                    "error"
+                );
+
 
                 return;
             }
-
-
-            mensagem.className =
-                "message";
-
-
-            mensagem.textContent =
-                "";
 
 
             const novaSenha =
@@ -687,10 +833,8 @@
 
 
             if (
-                novaSenha.length <
-                8
+                novaSenha.length < 8
             ) {
-
 
                 mostrarMensagem(
                     "A senha precisa ter pelo menos 8 caracteres.",
@@ -699,7 +843,6 @@
 
 
                 return;
-
             }
 
 
@@ -708,7 +851,6 @@
                 confirmarSenha
             ) {
 
-
                 mostrarMensagem(
                     "As duas senhas não são iguais.",
                     "error"
@@ -716,7 +858,6 @@
 
 
                 return;
-
             }
 
 
@@ -730,8 +871,12 @@
 
             try {
 
+                /*
+                    ATUALIZA A SENHA
+                */
 
                 const {
+                    data,
                     error
                 } =
                     await supabaseClient
@@ -769,10 +914,8 @@
 
 
                 /*
-                    Encerra a sessão temporária
-                    de recuperação.
+                    ENCERRA A SESSÃO
                 */
-
 
                 await supabaseClient
                     .auth
@@ -782,10 +925,8 @@
                 setTimeout(
                     function() {
 
-
                         window.location.href =
                             "login.html";
-
 
                     },
                     1800
@@ -794,8 +935,8 @@
 
             } catch (error) {
 
-
                 console.error(
+                    "Erro ao trocar senha:",
                     error
                 );
 
@@ -813,14 +954,17 @@
 
                 salvarBtn.textContent =
                     "Salvar nova senha";
-
             }
 
         }
     );
 
 
-    verificarRecuperacao();
+    /* =========================================
+       INICIAR
+    ========================================= */
+
+    processarLinkRecuperacao();
 
 
 </script>
