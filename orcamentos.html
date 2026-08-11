@@ -168,6 +168,17 @@
             border: 1px solid #cbe9d8;
         }
 
+
+        .btn-danger {
+            background: #fff1f1;
+            color: #b42318;
+            border: 1px solid #ffd0d0;
+        }
+
+        .btn-danger:hover {
+            background: #ffe5e5;
+        }
+
         .search-box {
             background: white;
             border: 1px solid #e0e8e3;
@@ -574,6 +585,279 @@
 }
 
 
+    function editarOrcamento(id) {
+
+            window.location.href =
+            "novo-orcamento.html?editar=" +
+            encodeURIComponent(id);
+}
+
+
+async function duplicarOrcamento(id) {
+
+    const confirmar =
+        confirm(
+            "Deseja criar uma cópia deste orçamento?"
+        );
+
+
+    if (!confirmar) {
+        return;
+    }
+
+
+    try {
+
+        mostrarMensagem(
+            "Duplicando orçamento...",
+            "success"
+        );
+
+
+        /*
+            BUSCA O ORÇAMENTO ORIGINAL
+        */
+
+        const {
+            data: original,
+            error: originalError
+        } =
+            await supabaseClient
+                .from("quotes")
+                .select(`
+                    id,
+                    client_id,
+                    title,
+                    description,
+                    subtotal,
+                    discount,
+                    total,
+                    validity_days,
+                    payment_method,
+                    notes
+                `)
+                .eq(
+                    "id",
+                    id
+                )
+                .eq(
+                    "company_id",
+                    companyId
+                )
+                .single();
+
+
+        if (originalError) {
+            throw originalError;
+        }
+
+
+        /*
+            BUSCA ITENS
+        */
+
+        const {
+            data: itens,
+            error: itensError
+        } =
+            await supabaseClient
+                .from("quote_items")
+                .select(`
+                    description,
+                    quantity,
+                    unit_price,
+                    total
+                `)
+                .eq(
+                    "quote_id",
+                    id
+                );
+
+
+        if (itensError) {
+            throw itensError;
+        }
+
+
+        /*
+            CRIA NOVO ORÇAMENTO
+        */
+
+        const {
+            data: novo,
+            error: novoError
+        } =
+            await supabaseClient
+                .from("quotes")
+                .insert({
+
+                    company_id:
+                        companyId,
+
+                    client_id:
+                        original.client_id,
+
+                    title:
+                        original.title +
+                        " - Cópia",
+
+                    description:
+                        original.description,
+
+                    subtotal:
+                        original.subtotal,
+
+                    discount:
+                        original.discount,
+
+                    total:
+                        original.total,
+
+                    validity_days:
+                        original.validity_days,
+
+                    payment_method:
+                        original.payment_method,
+
+                    notes:
+                        original.notes,
+
+                    status:
+                        "draft"
+
+                })
+                .select(
+                    "id, quote_number"
+                )
+                .single();
+
+
+        if (novoError) {
+            throw novoError;
+        }
+
+
+        /*
+            DUPLICA OS ITENS
+        */
+
+        if (
+            itens &&
+            itens.length > 0
+        ) {
+
+            const novosItens =
+                itens.map(
+                    function(item) {
+
+                        return {
+
+                            quote_id:
+                                novo.id,
+
+                            description:
+                                item.description,
+
+                            quantity:
+                                item.quantity,
+
+                            unit_price:
+                                item.unit_price,
+
+                            total:
+                                item.total
+                        };
+                    }
+                );
+
+
+            const {
+                error: novosItensError
+            } =
+                await supabaseClient
+                    .from("quote_items")
+                    .insert(
+                        novosItens
+                    );
+
+
+            if (novosItensError) {
+
+                /*
+                    SE DER ERRO,
+                    REMOVE A CÓPIA
+                */
+
+                await supabaseClient
+                    .from("quotes")
+                    .delete()
+                    .eq(
+                        "id",
+                        novo.id
+                    );
+
+
+                throw novosItensError;
+            }
+        }
+
+
+        /*
+            REGISTRA EVENTO
+        */
+
+        const {
+            error: eventError
+        } =
+            await supabaseClient
+                .from("quote_events")
+                .insert({
+
+                    quote_id:
+                        novo.id,
+
+                    event_type:
+                        "created"
+
+                });
+
+
+        if (eventError) {
+
+            console.error(
+                "Erro ao registrar evento:",
+                eventError
+            );
+        }
+
+
+        mostrarMensagem(
+            "Orçamento #" +
+            novo.quote_number +
+            " duplicado com sucesso!",
+            "success"
+        );
+
+
+        await carregarOrcamentos();
+
+
+    } catch(error) {
+
+        console.error(
+            "Erro ao duplicar:",
+            error
+        );
+
+
+        mostrarMensagem(
+            "Não foi possível duplicar: " +
+            error.message,
+            "error"
+        );
+    }
+}
+
     async function iniciarPagina() {
 
         try {
@@ -805,28 +1089,52 @@
 
                             <div class="actions">
 
-                                <button
-                                    class="btn btn-secondary"
-                                    onclick="visualizarOrcamento('${orcamento.public_token}')"
-                                >
-                                    👁 Abrir
-                                </button>
+    <button
+        class="btn btn-secondary"
+        onclick="visualizarOrcamento('${orcamento.public_token}')"
+    >
+        👁 Abrir
+    </button>
 
-                                <button
-                                    class="btn btn-secondary"
-                                    onclick="copiarLink('${orcamento.public_token}')"
-                                >
-                                    🔗 Copiar link
-                                </button>
+                <button
+                    class="btn btn-secondary"
+                    onclick="editarOrcamento('${orcamento.id}')"
+                >
+                    ✏️ Editar
+                </button>
 
-                                <button
-                                    class="btn btn-whatsapp"
-                                    onclick="enviarWhatsApp('${orcamento.id}')"
-                                >
-                                    📲 WhatsApp
-                                </button>
+                <button
+                    class="btn btn-secondary"
+                    onclick="duplicarOrcamento('${orcamento.id}')"
+                >
+                    📑 Duplicar
+                </button>
 
-                            </div>
+                <button
+                    class="btn btn-secondary"
+                    onclick="copiarLink('${orcamento.public_token}')"
+                >
+                    🔗 Link
+                </button>
+
+                <button
+                    class="btn btn-whatsapp"
+                    onclick="enviarWhatsApp('${orcamento.id}')"
+                >
+                    📲 WhatsApp
+                </button>
+
+                <button
+                    class="btn btn-danger"
+                    onclick="excluirOrcamento(
+                        '${orcamento.id}',
+                        '${String(orcamento.quote_number)}'
+                    )"
+                >
+                    🗑️ Excluir
+                </button>
+
+            </div>
 
                         </td>
 
