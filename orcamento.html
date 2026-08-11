@@ -383,7 +383,81 @@
                 font-size: 22px;
             }
         }
+            .company-brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 22px;
+}
 
+.company-logo-public {
+    width: 70px;
+    height: 70px;
+    background: white;
+    border-radius: 12px;
+    padding: 7px;
+    object-fit: contain;
+    display: none;
+}
+
+.company-name-public {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.company-details {
+    margin-top: 25px;
+    background: #f7faf8;
+    border: 1px solid #e5ece8;
+    border-radius: 10px;
+    padding: 18px;
+}
+
+.company-details h2 {
+    font-size: 15px;
+    margin-bottom: 13px;
+}
+
+.company-detail {
+    margin-bottom: 7px;
+    color: #596e63;
+    font-size: 13px;
+}
+
+.pix-box {
+    display: none;
+    margin-top: 25px;
+    background: #eafaf1;
+    border: 1px solid #c8eed9;
+    border-radius: 12px;
+    padding: 18px;
+}
+
+.pix-box span {
+    display: block;
+    color: #087f4f;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 7px;
+}
+
+.pix-key {
+    font-size: 17px;
+    font-weight: bold;
+    word-break: break-all;
+}
+
+.default-message {
+    display: none;
+    margin-top: 25px;
+    padding: 18px;
+    border-left: 4px solid #08a865;
+    background: #f7faf8;
+    color: #596e63;
+    line-height: 1.6;
+    border-radius: 0 10px 10px 0;
+    white-space: pre-wrap;
+}
     </style>
 
 </head>
@@ -439,19 +513,33 @@
 
         <section class="quote-header">
 
-            <div
-                id="quoteNumber"
-                class="quote-number"
-            ></div>
+    <div class="company-brand">
 
-            <h1 id="quoteTitle"></h1>
+        <img
+            id="companyLogo"
+            class="company-logo-public"
+            alt="Logo da empresa"
+        >
+
+        <div>
 
             <div
                 id="companyName"
-                class="company"
+                class="company-name-public"
             ></div>
 
-        </section>
+        </div>
+
+    </div>
+
+    <div
+        id="quoteNumber"
+        class="quote-number"
+    ></div>
+
+    <h1 id="quoteTitle"></h1>
+
+</section>
 
 
         <section class="quote-body">
@@ -468,6 +556,35 @@
                     ></strong>
 
                 </div>
+
+                <div
+    class="company-details"
+    id="companyDetails"
+>
+
+    <h2>Dados do prestador</h2>
+
+    <div
+        class="company-detail"
+        id="companyDocument"
+    ></div>
+
+    <div
+        class="company-detail"
+        id="companyAddress"
+    ></div>
+
+    <div
+        class="company-detail"
+        id="companyPhone"
+    ></div>
+
+    <div
+        class="company-detail"
+        id="companyEmail"
+    ></div>
+
+</div>
 
 
                 <div class="info">
@@ -579,6 +696,20 @@
 
                     </div>
 
+                    <div
+                      class="pix-box"
+                      id="pixBox"
+>
+
+                     <span>💳 PAGAMENTO VIA PIX</span>
+
+                     <div
+                       class="pix-key"
+                      id="pixKey"
+      ></div>
+
+</div>
+
 
                     <div
                         class="summary-row"
@@ -621,6 +752,12 @@
                 <h2>
                     Observações
                 </h2>
+
+
+                <div
+                class="default-message"
+                id="defaultMessage"
+></div>
 
                 <div
                     class="notes"
@@ -975,6 +1112,126 @@
             quoteData.company?.name ||
             "Prestador de serviço";
 
+
+            /*
+    LOGO DA EMPRESA
+*/
+
+const logo =
+    quoteData.company?.logo_url;
+
+const logoElement =
+    document.getElementById(
+        "companyLogo"
+    );
+
+if (logo) {
+
+    logoElement.src =
+        logo;
+
+    logoElement.style.display =
+        "block";
+}
+
+
+/*
+    DADOS DA EMPRESA
+*/
+
+function preencherDadoEmpresa(
+    id,
+    prefixo,
+    valor
+) {
+
+    const elemento =
+        document.getElementById(id);
+
+    if (valor) {
+
+        elemento.textContent =
+            prefixo + valor;
+
+    } else {
+
+        elemento.style.display =
+            "none";
+    }
+}
+
+
+preencherDadoEmpresa(
+    "companyDocument",
+    "📄 CPF/CNPJ: ",
+    quoteData.company?.document
+);
+
+
+preencherDadoEmpresa(
+    "companyAddress",
+    "📍 ",
+    quoteData.company?.address
+);
+
+
+preencherDadoEmpresa(
+    "companyPhone",
+    "📱 ",
+    quoteData.company?.phone
+);
+
+
+preencherDadoEmpresa(
+    "companyEmail",
+    "✉️ ",
+    quoteData.company?.email
+);
+
+
+/*
+    PIX
+*/
+
+if (
+    quoteData.company?.pix_key
+) {
+
+    document.getElementById(
+        "pixBox"
+    ).style.display =
+        "block";
+
+
+    document.getElementById(
+        "pixKey"
+    ).textContent =
+        quoteData.company.pix_key;
+}
+
+
+/*
+    MENSAGEM PADRÃO
+*/
+
+if (
+    quoteData.company?.default_message
+) {
+
+    const mensagemPadrao =
+        document.getElementById(
+            "defaultMessage"
+        );
+
+
+    mensagemPadrao.style.display =
+        "block";
+
+
+    mensagemPadrao.textContent =
+        quoteData.company
+            .default_message;
+}
 
         document.getElementById(
             "clientName"
