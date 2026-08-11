@@ -1,167 +1,375 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Entrar — OrçaZap</title>
 
     <style>
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+
         body {
             font-family: Arial, Helvetica, sans-serif;
+
             min-height: 100vh;
+
             background: #f5faf7;
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
             padding: 25px;
+
             color: #10251c;
         }
+
 
         .container {
             width: 100%;
             max-width: 420px;
         }
 
+
+        /* ===============================
+           LOGO
+        =============================== */
+
         .logo {
             text-align: center;
             margin-bottom: 25px;
         }
 
+
         .logo-icon {
             width: 46px;
             height: 46px;
+
             margin: 0 auto 10px;
+
             border-radius: 50%;
+
             background: #08a865;
+
             color: white;
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
             font-size: 22px;
+
             font-weight: bold;
         }
+
 
         .logo h1 {
             font-size: 24px;
             color: #087f4f;
         }
 
+
         .logo p {
             margin-top: 7px;
+
             color: #718078;
+
             font-size: 14px;
+
+            line-height: 1.5;
         }
+
+
+        /* ===============================
+           CARD
+        =============================== */
 
         .card {
             background: white;
+
             border: 1px solid #e0eae4;
+
             border-radius: 18px;
+
             padding: 32px;
-            box-shadow: 0 15px 45px rgba(0,0,0,0.07);
+
+            box-shadow:
+                0 15px 45px
+                rgba(0, 0, 0, 0.07);
         }
+
 
         .card h2 {
             font-size: 25px;
             margin-bottom: 8px;
         }
 
+
         .description {
             color: #718078;
+
             font-size: 14px;
+
             margin-bottom: 25px;
+
+            line-height: 1.5;
         }
+
+
+        /* ===============================
+           MENSAGEM
+        =============================== */
+
+        .message {
+            display: none;
+
+            padding: 13px 14px;
+
+            border-radius: 9px;
+
+            margin-bottom: 18px;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+        }
+
+
+        .message.error {
+            display: block;
+
+            background: #fff1f1;
+
+            color: #b42318;
+
+            border: 1px solid #ffd5d5;
+        }
+
+
+        .message.success {
+            display: block;
+
+            background: #eafaf1;
+
+            color: #087f4f;
+
+            border: 1px solid #c8eed9;
+        }
+
+
+        /* ===============================
+           FORMULÁRIO
+        =============================== */
 
         .form-group {
             margin-bottom: 18px;
         }
 
+
         label {
             display: block;
+
             margin-bottom: 7px;
+
             font-size: 14px;
+
             font-weight: 700;
         }
+
 
         input {
             width: 100%;
+
             padding: 13px 14px;
+
             border: 1px solid #d7e3dc;
+
             border-radius: 9px;
+
             font-size: 15px;
+
             outline: none;
+
+            background: white;
+
+            color: #10251c;
         }
+
 
         input:focus {
             border-color: #08a865;
-            box-shadow: 0 0 0 3px rgba(8,168,101,0.10);
+
+            box-shadow:
+                0 0 0 3px
+                rgba(8, 168, 101, 0.10);
         }
+
+
+        /* ===============================
+           ESQUECI SENHA
+        =============================== */
 
         .forgot {
             display: block;
+
             text-align: right;
+
             margin-top: -7px;
+
             margin-bottom: 20px;
+
             color: #078c55;
+
             text-decoration: none;
+
             font-size: 13px;
+
+            font-weight: 600;
         }
+
+
+        .forgot:hover {
+            text-decoration: underline;
+        }
+
+
+        /* ===============================
+           BOTÃO
+        =============================== */
 
         .btn {
             width: 100%;
+
             border: none;
+
             background: #08a865;
+
             color: white;
+
             padding: 14px;
+
             border-radius: 9px;
+
             font-size: 15px;
+
             font-weight: 700;
+
             cursor: pointer;
+
+            transition: .2s;
         }
+
 
         .btn:hover {
             background: #078c55;
         }
 
+
+        .btn:disabled {
+            opacity: .65;
+            cursor: not-allowed;
+        }
+
+
+        /* ===============================
+           CADASTRO
+        =============================== */
+
         .register {
             text-align: center;
+
             margin-top: 22px;
+
             font-size: 14px;
+
             color: #687870;
         }
 
+
         .register a {
             color: #078c55;
+
             font-weight: bold;
+
             text-decoration: none;
         }
+
+
+        .register a:hover {
+            text-decoration: underline;
+        }
+
+
+        /* ===============================
+           VOLTAR
+        =============================== */
 
         .back {
             display: block;
+
             text-align: center;
+
             margin-top: 20px;
+
             color: #718078;
+
             text-decoration: none;
+
             font-size: 13px;
         }
 
+
+        .back:hover {
+            color: #087f4f;
+        }
+
+
+        /* ===============================
+           RESPONSIVO
+        =============================== */
+
         @media (max-width: 500px) {
+
+            body {
+                padding: 18px;
+            }
+
+
             .card {
                 padding: 25px 20px;
             }
+
         }
+
     </style>
+
 </head>
+
 
 <body>
 
+
 <div class="container">
+
+
+    <!-- LOGO -->
 
     <div class="logo">
 
@@ -169,23 +377,44 @@
             O
         </div>
 
-        <h1>OrçaZap</h1>
+        <h1>
+            OrçaZap
+        </h1>
 
-        <p>Seu orçamento profissional, direto no WhatsApp.</p>
+        <p>
+            Seu orçamento profissional, direto no WhatsApp.
+        </p>
 
     </div>
 
 
+    <!-- CARD -->
+
     <div class="card">
 
-        <h2>Bem-vindo de volta!</h2>
+
+        <h2>
+            Bem-vindo de volta!
+        </h2>
+
 
         <p class="description">
             Entre na sua conta para continuar.
         </p>
 
 
+        <!-- MENSAGENS -->
+
+        <div
+            id="mensagem"
+            class="message"
+        ></div>
+
+
+        <!-- FORMULÁRIO -->
+
         <form id="loginForm">
+
 
             <div class="form-group">
 
@@ -193,10 +422,12 @@
                     E-mail
                 </label>
 
+
                 <input
                     type="email"
                     id="email"
                     placeholder="voce@email.com"
+                    autocomplete="email"
                     required
                 >
 
@@ -209,113 +440,369 @@
                     Senha
                 </label>
 
+
                 <input
                     type="password"
                     id="senha"
                     placeholder="Sua senha"
+                    autocomplete="current-password"
                     required
                 >
 
             </div>
 
 
-            <a href="#" class="forgot"
-               onclick="alert('A recuperação de senha será adicionada quando conectarmos o banco de dados.')">
+            <!-- RECUPERAR SENHA -->
+
+            <a
+                href="esqueci-senha.html"
+                class="forgot"
+            >
                 Esqueci minha senha
             </a>
 
 
-            <button type="submit" class="btn">
+            <!-- ENTRAR -->
+
+            <button
+                type="submit"
+                class="btn"
+                id="entrarBtn"
+            >
                 Entrar
             </button>
+
 
         </form>
 
 
+        <!-- CADASTRO -->
+
         <div class="register">
+
             Ainda não possui uma conta?
-            <a href="cadastro.html">Criar conta</a>
+
+            <a href="cadastro.html">
+                Criar conta
+            </a>
+
         </div>
+
 
     </div>
 
 
-    <a href="index.html" class="back">
+    <!-- VOLTAR -->
+
+    <a
+        href="index.html"
+        class="back"
+    >
         ← Voltar para o início
     </a>
 
+
 </div>
+
+
+<!-- SUPABASE -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+
 <script>
-    const SUPABASE_URL = "https://kceprnuvyrtnmbmknnwj.supabase.co";
 
-    const SUPABASE_KEY = "sb_publishable_aZPRlsOse9AxSJCjroHGRA_CaJlrNKo";
+    /* ============================================
+       SUPABASE
+    ============================================ */
 
-    const supabaseClient = supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
+    const SUPABASE_URL =
+        "https://kceprnuvyrtnmbmknnwj.supabase.co";
+
+
+    const SUPABASE_KEY =
+        "sb_publishable_aZPRlsOse9AxSJCjroHGRA_CaJlrNKo";
+
+
+    const supabaseClient =
+        supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
+
+    /* ============================================
+       ELEMENTOS
+    ============================================ */
+
+    const loginForm =
+        document.getElementById(
+            "loginForm"
+        );
+
+
+    const mensagem =
+        document.getElementById(
+            "mensagem"
+        );
+
+
+    const entrarBtn =
+        document.getElementById(
+            "entrarBtn"
+        );
+
+
+    /* ============================================
+       MOSTRAR MENSAGEM
+    ============================================ */
+
+    function mostrarMensagem(
+        texto,
+        tipo
+    ) {
+
+        mensagem.textContent =
+            texto;
+
+
+        mensagem.className =
+            "message " + tipo;
+
+    }
+
+
+    function limparMensagem() {
+
+        mensagem.textContent =
+            "";
+
+
+        mensagem.className =
+            "message";
+
+    }
+
+
+    /* ============================================
+       LOGIN
+    ============================================ */
+
+    loginForm.addEventListener(
+        "submit",
+        async function(event) {
+
+
+            event.preventDefault();
+
+
+            limparMensagem();
+
+
+            const email =
+                document.getElementById(
+                    "email"
+                )
+                .value
+                .trim();
+
+
+            const senha =
+                document.getElementById(
+                    "senha"
+                )
+                .value;
+
+
+            /* VALIDAÇÕES */
+
+
+            if (!email) {
+
+                mostrarMensagem(
+                    "Digite seu e-mail.",
+                    "error"
+                );
+
+
+                return;
+            }
+
+
+            if (!senha) {
+
+                mostrarMensagem(
+                    "Digite sua senha.",
+                    "error"
+                );
+
+
+                return;
+            }
+
+
+            /* BLOQUEIA BOTÃO */
+
+
+            entrarBtn.disabled =
+                true;
+
+
+            entrarBtn.textContent =
+                "Entrando...";
+
+
+            try {
+
+
+                const {
+                    data,
+                    error
+                } =
+                    await supabaseClient
+                        .auth
+                        .signInWithPassword({
+
+                            email:
+                                email,
+
+                            password:
+                                senha
+
+                        });
+
+
+                if (error) {
+
+                    throw error;
+                }
+
+
+                if (
+                    !data ||
+                    !data.user
+                ) {
+
+                    throw new Error(
+                        "Não foi possível iniciar sua sessão."
+                    );
+                }
+
+
+                mostrarMensagem(
+                    "Login realizado com sucesso! Entrando...",
+                    "success"
+                );
+
+
+                /*
+                    Pequeno tempo apenas para
+                    o usuário visualizar a mensagem.
+                */
+
+
+                setTimeout(
+                    function() {
+
+
+                        window.location.href =
+                            "dashboard.html";
+
+
+                    },
+                    600
+                );
+
+
+            } catch (error) {
+
+
+                console.error(
+                    "Erro no login:",
+                    error
+                );
+
+
+                let textoErro =
+                    error.message ||
+                    "Não foi possível entrar.";
+
+
+                const erroMinusculo =
+                    textoErro
+                        .toLowerCase();
+
+
+                if (
+                    erroMinusculo.includes(
+                        "invalid login credentials"
+                    )
+                ) {
+
+                    textoErro =
+                        "E-mail ou senha incorretos.";
+
+                }
+
+
+                else if (
+                    erroMinusculo.includes(
+                        "email not confirmed"
+                    )
+                ) {
+
+                    textoErro =
+                        "Você precisa confirmar seu e-mail antes de entrar.";
+
+                }
+
+
+                else if (
+                    erroMinusculo.includes(
+                        "email rate limit exceeded"
+                    )
+                ) {
+
+                    textoErro =
+                        "Muitas tentativas foram realizadas. Aguarde alguns minutos e tente novamente.";
+
+                }
+
+
+                else if (
+                    erroMinusculo.includes(
+                        "failed to fetch"
+                    )
+                ) {
+
+                    textoErro =
+                        "Não foi possível conectar ao servidor. Verifique sua internet e tente novamente.";
+
+                }
+
+
+                mostrarMensagem(
+                    textoErro,
+                    "error"
+                );
+
+
+                entrarBtn.disabled =
+                    false;
+
+
+                entrarBtn.textContent =
+                    "Entrar";
+
+            }
+
+        }
     );
 
-    const loginForm = document.getElementById("loginForm");
 
-    loginForm.addEventListener("submit", async function(event) {
-        event.preventDefault();
-
-        const email = document.getElementById("email").value.trim();
-        const senha = document.getElementById("senha").value;
-
-        const botao = loginForm.querySelector("button[type='submit']");
-
-        botao.disabled = true;
-        botao.textContent = "Entrando...";
-
-        try {
-
-            const { data, error } =
-                await supabaseClient.auth.signInWithPassword({
-                    email: email,
-                    password: senha
-                });
-
-            if (error) {
-                throw error;
-            }
-
-            console.log("Login realizado:", data);
-
-            alert("Login realizado com sucesso!");
-
-            window.location.href = "dashboard.html";
-
-        } catch (error) {
-
-            console.error("Erro no login:", error);
-
-            let mensagem = error.message;
-
-            if (
-                mensagem &&
-                mensagem.toLowerCase().includes("invalid login credentials")
-            ) {
-                mensagem = "E-mail ou senha incorretos.";
-            }
-
-            if (
-                mensagem &&
-                mensagem.toLowerCase().includes("email not confirmed")
-            ) {
-                mensagem = "Você precisa confirmar seu e-mail antes de entrar.";
-            }
-
-            alert("Não foi possível entrar:\n\n" + mensagem);
-
-        } finally {
-
-            botao.disabled = false;
-            botao.textContent = "Entrar";
-        }
-    });
 </script>
+
+
 </body>
+
 </html>

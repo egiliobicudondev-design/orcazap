@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Criar nova senha — OrçaZap
+    </title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+
+            background: #f5f8f6;
+
+            color: #13261d;
+
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 430px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 10px;
+
+            margin-bottom: 25px;
+
+            font-size: 25px;
+            font-weight: bold;
+
+            color: #087f4f;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+
+            border-radius: 50%;
+
+            background: #08a865;
+
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 21px;
+        }
+
+        .card {
+            background: white;
+
+            border: 1px solid #e0e8e3;
+
+            border-radius: 16px;
+
+            padding: 32px;
+
+            box-shadow:
+                0 8px 30px
+                rgba(0, 0, 0, .04);
+        }
+
+        h1 {
+            font-size: 25px;
+
+            margin-bottom: 9px;
+
+            text-align: center;
+        }
+
+        .description {
+            text-align: center;
+
+            color: #718078;
+
+            line-height: 1.5;
+
+            font-size: 14px;
+
+            margin-bottom: 28px;
+        }
+
+        .loading {
+            text-align: center;
+
+            color: #718078;
+
+            padding: 20px 0;
+        }
+
+        #senhaArea {
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            font-size: 13px;
+            font-weight: bold;
+
+            color: #42594e;
+        }
+
+        input {
+            width: 100%;
+
+            padding: 13px 14px;
+
+            border: 1px solid #d8e4dd;
+
+            border-radius: 9px;
+
+            outline: none;
+
+            font-size: 14px;
+        }
+
+        input:focus {
+            border-color: #08a865;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(8, 168, 101, .10);
+        }
+
+        .password-info {
+            font-size: 12px;
+
+            color: #718078;
+
+            margin-top: 6px;
+        }
+
+        .btn {
+            width: 100%;
+
+            padding: 13px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background: #08a865;
+
+            color: white;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background: #078c55;
+        }
+
+        .btn:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .message {
+            display: none;
+
+            padding: 13px;
+
+            border-radius: 8px;
+
+            margin-bottom: 18px;
+
+            font-size: 13px;
+
+            line-height: 1.4;
+        }
+
+        .message.success {
+            display: block;
+
+            background: #eafaf1;
+
+            color: #087f4f;
+
+            border: 1px solid #c8eed9;
+        }
+
+        .message.error {
+            display: block;
+
+            background: #fff1f1;
+
+            color: #b42318;
+
+            border: 1px solid #ffd5d5;
+        }
+
+        .back {
+            text-align: center;
+
+            margin-top: 22px;
+
+            font-size: 13px;
+        }
+
+        .back a {
+            text-decoration: none;
+
+            color: #087f4f;
+
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            O
+        </div>
+
+        OrçaZap
+
+    </div>
+
+
+    <div class="card">
+
+
+        <h1>
+            Criar nova senha
+        </h1>
+
+
+        <p class="description">
+
+            Escolha uma nova senha para acessar sua conta.
+
+        </p>
+
+
+        <div
+            id="mensagem"
+            class="message"
+        ></div>
+
+
+        <div
+            id="carregando"
+            class="loading"
+        >
+
+            Verificando link de recuperação...
+
+        </div>
+
+
+        <div id="senhaArea">
+
+
+            <form id="senhaForm">
+
+
+                <div class="form-group">
+
+                    <label for="novaSenha">
+
+                        Nova senha
+
+                    </label>
+
+
+                    <input
+                        type="password"
+                        id="novaSenha"
+                        placeholder="Digite sua nova senha"
+                        autocomplete="new-password"
+                        minlength="8"
+                        required
+                    >
+
+
+                    <div class="password-info">
+
+                        Use pelo menos 8 caracteres.
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="confirmarSenha">
+
+                        Confirmar nova senha
+
+                    </label>
+
+
+                    <input
+                        type="password"
+                        id="confirmarSenha"
+                        placeholder="Digite novamente"
+                        autocomplete="new-password"
+                        minlength="8"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="btn"
+                    id="salvarBtn"
+                >
+
+                    Salvar nova senha
+
+                </button>
+
+
+            </form>
+
+
+        </div>
+
+
+        <div class="back">
+
+            <a href="login.html">
+
+                ← Voltar para o login
+
+            </a>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+<script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+></script>
+
+
+<script>
+
+
+    const SUPABASE_URL =
+        "https://kceprnuvyrtnmbmknnwj.supabase.co";
+
+
+    const SUPABASE_KEY =
+        "COLE_AQUI_A_MESMA_SB_PUBLISHABLE";
+
+
+    const supabaseClient =
+        supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
+
+    const mensagem =
+        document.getElementById(
+            "mensagem"
+        );
+
+
+    const carregando =
+        document.getElementById(
+            "carregando"
+        );
+
+
+    const senhaArea =
+        document.getElementById(
+            "senhaArea"
+        );
+
+
+    const salvarBtn =
+        document.getElementById(
+            "salvarBtn"
+        );
+
+
+    let podeAlterarSenha =
+        false;
+
+
+    function mostrarMensagem(
+        texto,
+        tipo
+    ) {
+
+        mensagem.textContent =
+            texto;
+
+
+        mensagem.className =
+            "message " + tipo;
+    }
+
+
+    function liberarFormulario() {
+
+
+        podeAlterarSenha =
+            true;
+
+
+        carregando.style.display =
+            "none";
+
+
+        senhaArea.style.display =
+            "block";
+
+    }
+
+
+    function mostrarLinkInvalido() {
+
+
+        podeAlterarSenha =
+            false;
+
+
+        carregando.style.display =
+            "none";
+
+
+        senhaArea.style.display =
+            "none";
+
+
+        mostrarMensagem(
+
+            "O link de recuperação é inválido ou expirou. Solicite um novo link.",
+
+            "error"
+
+        );
+
+    }
+
+
+    /* ======================================
+       ESCUTA RECUPERAÇÃO DE SENHA
+    ====================================== */
+
+
+    supabaseClient
+        .auth
+        .onAuthStateChange(
+            function(
+                event,
+                session
+            ) {
+
+
+                console.log(
+                    "Evento Auth:",
+                    event
+                );
+
+
+                if (
+                    event ===
+                    "PASSWORD_RECOVERY"
+                ) {
+
+
+                    liberarFormulario();
+
+                }
+
+
+                if (
+                    event ===
+                    "SIGNED_IN" &&
+                    session
+                ) {
+
+
+                    liberarFormulario();
+
+                }
+
+            }
+        );
+
+
+    /* ======================================
+       VERIFICA SE A SESSÃO FOI CRIADA
+    ====================================== */
+
+
+    async function verificarRecuperacao() {
+
+
+        try {
+
+
+            const hash =
+                window.location.hash;
+
+
+            const parametros =
+                new URLSearchParams(
+                    hash.startsWith("#")
+                        ? hash.substring(1)
+                        : hash
+                );
+
+
+            const erroURL =
+                parametros.get(
+                    "error_description"
+                );
+
+
+            if (erroURL) {
+
+
+                mostrarLinkInvalido();
+
+
+                return;
+
+            }
+
+
+            /*
+                Aguarda o Supabase processar
+                os dados que vieram no link.
+            */
+
+
+            await new Promise(
+                function(resolve) {
+
+                    setTimeout(
+                        resolve,
+                        600
+                    );
+
+                }
+            );
+
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient
+                    .auth
+                    .getSession();
+
+
+            if (error) {
+
+                throw error;
+            }
+
+
+            if (
+                data.session
+            ) {
+
+
+                liberarFormulario();
+
+
+            } else {
+
+
+                mostrarLinkInvalido();
+
+            }
+
+
+        } catch (error) {
+
+
+            console.error(
+                error
+            );
+
+
+            mostrarLinkInvalido();
+
+        }
+
+    }
+
+
+    /* ======================================
+       SALVAR SENHA
+    ====================================== */
+
+
+    document.getElementById(
+        "senhaForm"
+    ).addEventListener(
+        "submit",
+        async function(event) {
+
+
+            event.preventDefault();
+
+
+            if (!podeAlterarSenha) {
+
+                return;
+            }
+
+
+            mensagem.className =
+                "message";
+
+
+            mensagem.textContent =
+                "";
+
+
+            const novaSenha =
+                document.getElementById(
+                    "novaSenha"
+                ).value;
+
+
+            const confirmarSenha =
+                document.getElementById(
+                    "confirmarSenha"
+                ).value;
+
+
+            if (
+                novaSenha.length <
+                8
+            ) {
+
+
+                mostrarMensagem(
+                    "A senha precisa ter pelo menos 8 caracteres.",
+                    "error"
+                );
+
+
+                return;
+
+            }
+
+
+            if (
+                novaSenha !==
+                confirmarSenha
+            ) {
+
+
+                mostrarMensagem(
+                    "As duas senhas não são iguais.",
+                    "error"
+                );
+
+
+                return;
+
+            }
+
+
+            salvarBtn.disabled =
+                true;
+
+
+            salvarBtn.textContent =
+                "Salvando...";
+
+
+            try {
+
+
+                const {
+                    error
+                } =
+                    await supabaseClient
+                        .auth
+                        .updateUser({
+
+                            password:
+                                novaSenha
+
+                        });
+
+
+                if (error) {
+
+                    throw error;
+                }
+
+
+                mostrarMensagem(
+                    "Senha alterada com sucesso! Redirecionando para o login...",
+                    "success"
+                );
+
+
+                document.getElementById(
+                    "novaSenha"
+                ).value =
+                    "";
+
+
+                document.getElementById(
+                    "confirmarSenha"
+                ).value =
+                    "";
+
+
+                /*
+                    Encerra a sessão temporária
+                    de recuperação.
+                */
+
+
+                await supabaseClient
+                    .auth
+                    .signOut();
+
+
+                setTimeout(
+                    function() {
+
+
+                        window.location.href =
+                            "login.html";
+
+
+                    },
+                    1800
+                );
+
+
+            } catch (error) {
+
+
+                console.error(
+                    error
+                );
+
+
+                mostrarMensagem(
+                    "Não foi possível alterar a senha: " +
+                    error.message,
+                    "error"
+                );
+
+
+                salvarBtn.disabled =
+                    false;
+
+
+                salvarBtn.textContent =
+                    "Salvar nova senha";
+
+            }
+
+        }
+    );
+
+
+    verificarRecuperacao();
+
+
+</script>
+
+
+</body>
+
+</html>
