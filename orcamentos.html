@@ -556,19 +556,22 @@
 
     function criarLinkPublico(token) {
 
-        const url =
-            new URL(
-                "orcamento.html",
-                window.location.href
-            );
+    const baseURL =
+        "https://egiliobicudondev-design.github.io/orcazap/";
 
-        url.searchParams.set(
-            "token",
-            token
+    const url =
+        new URL(
+            "orcamento.html",
+            baseURL
         );
 
-        return url.href;
-    }
+    url.searchParams.set(
+        "token",
+        token
+    );
+
+    return url.href;
+}
 
 
     async function iniciarPagina() {
