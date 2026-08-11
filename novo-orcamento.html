@@ -893,12 +893,12 @@
             } =
                 await supabaseClient
                     .from("companies")
-                    .select("id, name")
+                    .select("id, name, default_validity_days")
                     .eq(
                         "user_id",
                         user.id
-                    )
-                    .maybeSingle();
+)
+.maybeSingle();
 
 
             if (companyError) {
@@ -914,14 +914,28 @@
             }
 
 
-            companyId =
-                company.id;
+                companyId =
+                    company.id;
 
 
             document.getElementById(
                 "companyName"
             ).textContent =
                 company.name;
+
+
+                /*
+                VALIDADE PADRÃO DA EMPRESA
+                */
+
+                const validadePadrao =
+                    company.default_validity_days || 7;
+
+
+                document.getElementById(
+                    "validade"
+                ).value =
+                    String(validadePadrao);
 
 
             await carregarClientes();
