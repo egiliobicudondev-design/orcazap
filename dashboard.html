@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard — OrçaZap</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f8f6;
+            color: #13261d;
+        }
+
+        .app {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: #ffffff;
+            border-right: 1px solid #e1e9e4;
+            padding: 24px 18px;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 21px;
+            font-weight: bold;
+            color: #087f4f;
+            margin-bottom: 35px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #08a865;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu a {
+            display: block;
+            text-decoration: none;
+            color: #4f665b;
+            padding: 12px 13px;
+            border-radius: 9px;
+            margin-bottom: 7px;
+            font-size: 14px;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background: #e8f8ef;
+            color: #087f4f;
+            font-weight: bold;
+        }
+
+        .logout {
+            position: absolute;
+            bottom: 25px;
+            left: 18px;
+            right: 18px;
+        }
+
+        .logout button {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #dce7e1;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #a33;
+            font-weight: bold;
+        }
+
+        .content {
+            margin-left: 240px;
+            width: calc(100% - 240px);
+        }
+
+        .topbar {
+            height: 75px;
+            padding: 0 35px;
+            background: white;
+            border-bottom: 1px solid #e1e9e4;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .company-name {
+            font-size: 14px;
+            color: #5d7167;
+        }
+
+        .user-email {
+            font-size: 13px;
+            color: #718078;
+        }
+
+        main {
+            max-width: 1300px;
+            margin: auto;
+            padding: 35px;
+        }
+
+        .welcome {
+            margin-bottom: 30px;
+        }
+
+        .welcome h1 {
+            font-size: 30px;
+            margin-bottom: 7px;
+        }
+
+        .welcome p {
+            color: #718078;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            padding: 12px 18px;
+            border-radius: 9px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #08a865;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: white;
+            border: 1px solid #dbe6e0;
+            color: #17352a;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e0e8e3;
+            border-radius: 14px;
+            padding: 22px;
+        }
+
+        .card span {
+            display: block;
+            color: #718078;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .card strong {
+            font-size: 27px;
+        }
+
+        .section {
+            background: white;
+            border: 1px solid #e0e8e3;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 20px;
+            border-bottom: 1px solid #e8eeea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-header h2 {
+            font-size: 18px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 15px 20px;
+            border-bottom: 1px solid #edf1ef;
+            font-size: 14px;
+        }
+
+        th {
+            color: #718078;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 45px 20px;
+            color: #718078;
+        }
+
+        .status {
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            background: #eef4f0;
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                display: none;
+            }
+
+            .content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 550px) {
+            main {
+                padding: 22px 15px;
+            }
+
+            .topbar {
+                padding: 0 15px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            table {
+                min-width: 650px;
+            }
+
+            .section {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-icon">O</div>
+            OrçaZap
+        </div>
+
+        <nav class="menu">
+            <a href="dashboard.html" class="active">📊 Dashboard</a>
+            <a href="clientes.html">👥 Clientes</a>
+            <a href="orcamentos.html">📄 Orçamentos</a>
+            <a href="novo-orcamento.html">➕ Novo orçamento</a>
+            <a href="#">⚙️ Configurações</a>
+        </nav>
+
+        <div class="logout">
+            <button id="logoutBtn">Sair da conta</button>
+        </div>
+
+    </aside>
+
+    <div class="content">
+
+        <header class="topbar">
+
+            <div class="company-name" id="companyName">
+                Carregando empresa...
+            </div>
+
+            <div class="user-email" id="userEmail"></div>
+
+        </header>
+
+        <main>
+
+            <div class="welcome">
+                <h1>Olá, <span id="userName">usuário</span> 👋</h1>
+                <p>Acompanhe seus clientes e orçamentos.</p>
+            </div>
+
+            <div class="actions">
+                <a href="novo-orcamento.html" class="btn btn-primary">
+                    + Novo orçamento
+                </a>
+
+                <a href="clientes.html" class="btn btn-secondary">
+                    + Novo cliente
+                </a>
+            </div>
+
+            <section class="cards">
+
+                <div class="card">
+                    <span>Total de clientes</span>
+                    <strong id="totalClients">0</strong>
+                </div>
+
+                <div class="card">
+                    <span>Orçamentos</span>
+                    <strong id="totalQuotes">0</strong>
+                </div>
+
+                <div class="card">
+                    <span>Aprovados</span>
+                    <strong id="approvedQuotes">0</strong>
+                </div>
+
+                <div class="card">
+                    <span>Valor aprovado</span>
+                    <strong id="approvedValue">R$ 0,00</strong>
+                </div>
+
+            </section>
+
+            <section class="section">
+
+                <div class="section-header">
+                    <h2>Últimos orçamentos</h2>
+
+                    <a href="orcamentos.html" class="btn btn-secondary">
+                        Ver todos
+                    </a>
+                </div>
+
+                <div id="quotesArea">
+
+                    <div class="empty">
+                        Carregando seus orçamentos...
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+    const SUPABASE_URL = "https://kceprnuvyrtnmbmknnwj.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_aZPRlsOse9AxSJCjroHGRA_CaJlrNKo";
+
+    const supabaseClient = supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+    async function carregarDashboard() {
+
+        try {
+
+            // CONFERE USUÁRIO LOGADO
+            const {
+                data: { user },
+                error: userError
+            } = await supabaseClient.auth.getUser();
+
+            if (userError || !user) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            document.getElementById("userEmail").textContent = user.email;
+
+            // BUSCA PERFIL
+            const { data: profile } = await supabaseClient
+                .from("profiles")
+                .select("name")
+                .eq("id", user.id)
+                .maybeSingle();
+
+            if (profile && profile.name) {
+                document.getElementById("userName").textContent =
+                    profile.name.split(" ")[0];
+            }
+
+            // BUSCA EMPRESA
+            const { data: company, error: companyError } =
+                await supabaseClient
+                    .from("companies")
+                    .select("id, name")
+                    .eq("user_id", user.id)
+                    .maybeSingle();
+
+            if (companyError) {
+                throw companyError;
+            }
+
+            if (!company) {
+                document.getElementById("companyName").textContent =
+                    "Empresa não encontrada";
+
+                return;
+            }
+
+            document.getElementById("companyName").textContent =
+                company.name;
+
+            // CLIENTES
+            const { data: clients, error: clientsError } =
+                await supabaseClient
+                    .from("clients")
+                    .select("id")
+                    .eq("company_id", company.id);
+
+            if (clientsError) {
+                throw clientsError;
+            }
+
+            document.getElementById("totalClients").textContent =
+                clients ? clients.length : 0;
+
+            // ORÇAMENTOS
+            const { data: quotes, error: quotesError } =
+                await supabaseClient
+                    .from("quotes")
+                    .select(`
+                        id,
+                        quote_number,
+                        title,
+                        total,
+                        status,
+                        created_at,
+                        clients (
+                            name
+                        )
+                    `)
+                    .eq("company_id", company.id)
+                    .order("created_at", { ascending: false });
+
+            if (quotesError) {
+                throw quotesError;
+            }
+
+            const lista = quotes || [];
+
+            document.getElementById("totalQuotes").textContent =
+                lista.length;
+
+            const aprovados = lista.filter(
+                quote => quote.status === "approved"
+            );
+
+            document.getElementById("approvedQuotes").textContent =
+                aprovados.length;
+
+            const valorAprovado = aprovados.reduce(
+                (total, quote) => total + Number(quote.total || 0),
+                0
+            );
+
+            document.getElementById("approvedValue").textContent =
+                valorAprovado.toLocaleString(
+                    "pt-BR",
+                    {
+                        style: "currency",
+                        currency: "BRL"
+                    }
+                );
+
+            mostrarOrcamentos(lista.slice(0, 5));
+
+        } catch (error) {
+
+            console.error("Erro no dashboard:", error);
+
+            document.getElementById("quotesArea").innerHTML = `
+                <div class="empty">
+                    Não foi possível carregar os dados.
+                </div>
+            `;
+        }
+    }
+
+    function mostrarOrcamentos(quotes) {
+
+        const area = document.getElementById("quotesArea");
+
+        if (!quotes || quotes.length === 0) {
+
+            area.innerHTML = `
+                <div class="empty">
+                    Você ainda não possui orçamentos.<br><br>
+
+                    <a
+                        href="novo-orcamento.html"
+                        class="btn btn-primary"
+                    >
+                        Criar primeiro orçamento
+                    </a>
+                </div>
+            `;
+
+            return;
+        }
+
+        let html = `
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nº</th>
+                        <th>Cliente</th>
+                        <th>Serviço</th>
+                        <th>Valor</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+        `;
+
+        quotes.forEach(function(quote) {
+
+            const cliente =
+                quote.clients?.name || "Cliente";
+
+            const valor =
+                Number(quote.total || 0).toLocaleString(
+                    "pt-BR",
+                    {
+                        style: "currency",
+                        currency: "BRL"
+                    }
+                );
+
+            html += `
+                <tr>
+                    <td>#${quote.quote_number}</td>
+
+                    <td>${cliente}</td>
+
+                    <td>${quote.title}</td>
+
+                    <td>${valor}</td>
+
+                    <td>
+                        <span class="status">
+                            ${traduzirStatus(quote.status)}
+                        </span>
+                    </td>
+                </tr>
+            `;
+        });
+
+        html += `
+                </tbody>
+            </table>
+        `;
+
+        area.innerHTML = html;
+    }
+
+    function traduzirStatus(status) {
+
+        const statusMap = {
+            draft: "Rascunho",
+            sent: "Enviado",
+            viewed: "Visualizado",
+            waiting: "Aguardando",
+            approved: "Aprovado",
+            rejected: "Recusado",
+            expired: "Expirado"
+        };
+
+        return statusMap[status] || status;
+    }
+
+    document
+        .getElementById("logoutBtn")
+        .addEventListener("click", async function() {
+
+            await supabaseClient.auth.signOut();
+
+            window.location.href = "login.html";
+        });
+
+    carregarDashboard();
+</script>
+
+</body>
+</html>

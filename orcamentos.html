@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Orçamentos — OrçaZap</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f8f6;
+            color: #13261d;
+        }
+
+        .app {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: white;
+            border-right: 1px solid #e1e9e4;
+            padding: 24px 18px;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 21px;
+            font-weight: bold;
+            color: #087f4f;
+            margin-bottom: 35px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #08a865;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu a {
+            display: block;
+            text-decoration: none;
+            color: #4f665b;
+            padding: 12px 13px;
+            border-radius: 9px;
+            margin-bottom: 7px;
+            font-size: 14px;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background: #e8f8ef;
+            color: #087f4f;
+            font-weight: bold;
+        }
+
+        .logout {
+            position: absolute;
+            bottom: 25px;
+            left: 18px;
+            right: 18px;
+        }
+
+        .logout button {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #dce7e1;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #a33;
+            font-weight: bold;
+        }
+
+        .content {
+            margin-left: 240px;
+            width: calc(100% - 240px);
+        }
+
+        .topbar {
+            height: 75px;
+            padding: 0 35px;
+            background: white;
+            border-bottom: 1px solid #e1e9e4;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .company-name {
+            font-size: 14px;
+            color: #5d7167;
+        }
+
+        .user-email {
+            font-size: 13px;
+            color: #718078;
+        }
+
+        main {
+            max-width: 1300px;
+            margin: auto;
+            padding: 35px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 30px;
+            margin-bottom: 7px;
+        }
+
+        .page-header p {
+            color: #718078;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 8px;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #08a865;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #17352a;
+            border: 1px solid #dbe6e0;
+        }
+
+        .btn-whatsapp {
+            background: #e8f8ef;
+            color: #087f4f;
+            border: 1px solid #cbe9d8;
+        }
+
+        .search-box {
+            background: white;
+            border: 1px solid #e0e8e3;
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 13px 15px;
+            border: 1px solid #d8e4dd;
+            border-radius: 9px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .search-box input:focus {
+            border-color: #08a865;
+            box-shadow: 0 0 0 3px rgba(8,168,101,.10);
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e0e8e3;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 20px;
+            border-bottom: 1px solid #e8eeea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h2 {
+            font-size: 18px;
+        }
+
+        .contador {
+            color: #718078;
+            font-size: 13px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 15px 18px;
+            border-bottom: 1px solid #edf1ef;
+            font-size: 13px;
+        }
+
+        th {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #718078;
+        }
+
+        .status {
+            padding: 6px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 11px;
+            font-weight: bold;
+            background: #edf2ef;
+        }
+
+        .status.approved {
+            background: #e4f8ed;
+            color: #087f4f;
+        }
+
+        .status.rejected {
+            background: #fff0f0;
+            color: #b42318;
+        }
+
+        .status.viewed {
+            background: #edf5ff;
+            color: #175cd3;
+        }
+
+        .status.sent {
+            background: #fff8df;
+            color: #8a6100;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .empty {
+            padding: 55px 20px;
+            text-align: center;
+            color: #718078;
+        }
+
+        .message {
+            display: none;
+            padding: 13px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .message.success {
+            display: block;
+            background: #eafaf1;
+            color: #087f4f;
+            border: 1px solid #c8eed9;
+        }
+
+        .message.error {
+            display: block;
+            background: #fff1f1;
+            color: #b42318;
+            border: 1px solid #ffd5d5;
+        }
+
+        @media(max-width:900px) {
+            .sidebar {
+                display: none;
+            }
+
+            .content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .card {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 950px;
+            }
+        }
+
+        @media(max-width:600px) {
+            main {
+                padding: 22px 15px;
+            }
+
+            .topbar {
+                padding: 0 15px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .page-header .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-icon">O</div>
+            OrçaZap
+        </div>
+
+        <nav class="menu">
+            <a href="dashboard.html">📊 Dashboard</a>
+            <a href="clientes.html">👥 Clientes</a>
+            <a href="orcamentos.html" class="active">📄 Orçamentos</a>
+            <a href="novo-orcamento.html">➕ Novo orçamento</a>
+            <a href="#">⚙️ Configurações</a>
+        </nav>
+
+        <div class="logout">
+            <button id="logoutBtn">
+                Sair da conta
+            </button>
+        </div>
+
+    </aside>
+
+    <div class="content">
+
+        <header class="topbar">
+
+            <div
+                class="company-name"
+                id="companyName"
+            >
+                Carregando empresa...
+            </div>
+
+            <div
+                class="user-email"
+                id="userEmail"
+            ></div>
+
+        </header>
+
+        <main>
+
+            <div class="page-header">
+
+                <div>
+                    <h1>Orçamentos</h1>
+
+                    <p>
+                        Acompanhe suas propostas e envie para seus clientes.
+                    </p>
+                </div>
+
+                <a
+                    href="novo-orcamento.html"
+                    class="btn btn-primary"
+                >
+                    + Novo orçamento
+                </a>
+
+            </div>
+
+            <div
+                id="mensagem"
+                class="message"
+            ></div>
+
+            <div class="search-box">
+
+                <input
+                    type="text"
+                    id="pesquisa"
+                    placeholder="🔎 Pesquisar cliente ou serviço..."
+                >
+
+            </div>
+
+            <section class="card">
+
+                <div class="card-header">
+
+                    <h2>Seus orçamentos</h2>
+
+                    <span
+                        class="contador"
+                        id="contador"
+                    >
+                        0 orçamentos
+                    </span>
+
+                </div>
+
+                <div id="orcamentosArea">
+
+                    <div class="empty">
+                        Carregando orçamentos...
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+    const SUPABASE_URL =
+        "https://kceprnuvyrtnmbmknnwj.supabase.co";
+
+    const SUPABASE_KEY =
+        "sb_publishable_aZPRlsOse9AxSJCjroHGRA_CaJlrNKo";
+
+
+    const supabaseClient =
+        supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
+
+    let companyId = null;
+    let orcamentos = [];
+
+
+    const area =
+        document.getElementById(
+            "orcamentosArea"
+        );
+
+
+    const mensagem =
+        document.getElementById(
+            "mensagem"
+        );
+
+
+    function mostrarMensagem(
+        texto,
+        tipo
+    ) {
+
+        mensagem.textContent =
+            texto;
+
+        mensagem.className =
+            "message " + tipo;
+
+
+        setTimeout(
+            function() {
+
+                mensagem.className =
+                    "message";
+
+                mensagem.textContent =
+                    "";
+
+            },
+            3000
+        );
+    }
+
+
+    function moeda(valor) {
+
+        return Number(
+            valor || 0
+        ).toLocaleString(
+            "pt-BR",
+            {
+                style: "currency",
+                currency: "BRL"
+            }
+        );
+    }
+
+
+    function traduzirStatus(status) {
+
+        const mapa = {
+            draft: "Rascunho",
+            sent: "Enviado",
+            viewed: "Visualizado",
+            waiting: "Aguardando",
+            approved: "Aprovado",
+            rejected: "Recusado",
+            expired: "Expirado"
+        };
+
+        return mapa[status] || status;
+    }
+
+
+    function escaparHTML(texto) {
+
+        return String(
+            texto || ""
+        )
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+
+    function criarLinkPublico(token) {
+
+        const url =
+            new URL(
+                "orcamento.html",
+                window.location.href
+            );
+
+        url.searchParams.set(
+            "token",
+            token
+        );
+
+        return url.href;
+    }
+
+
+    async function iniciarPagina() {
+
+        try {
+
+            const {
+                data: { user },
+                error: userError
+            } =
+                await supabaseClient
+                    .auth
+                    .getUser();
+
+
+            if (
+                userError ||
+                !user
+            ) {
+
+                window.location.href =
+                    "login.html";
+
+                return;
+            }
+
+
+            document.getElementById(
+                "userEmail"
+            ).textContent =
+                user.email;
+
+
+            const {
+                data: company,
+                error: companyError
+            } =
+                await supabaseClient
+                    .from("companies")
+                    .select("id, name")
+                    .eq(
+                        "user_id",
+                        user.id
+                    )
+                    .maybeSingle();
+
+
+            if (companyError) {
+                throw companyError;
+            }
+
+
+            if (!company) {
+
+                throw new Error(
+                    "Empresa não encontrada."
+                );
+            }
+
+
+            companyId =
+                company.id;
+
+
+            document.getElementById(
+                "companyName"
+            ).textContent =
+                company.name;
+
+
+            await carregarOrcamentos();
+
+        } catch(error) {
+
+            console.error(error);
+
+            area.innerHTML = `
+                <div class="empty">
+                    Não foi possível carregar os orçamentos.
+                </div>
+            `;
+        }
+    }
+
+
+    async function carregarOrcamentos() {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from("quotes")
+                .select(`
+                    id,
+                    quote_number,
+                    title,
+                    total,
+                    status,
+                    public_token,
+                    created_at,
+                    clients (
+                        name,
+                        phone
+                    )
+                `)
+                .eq(
+                    "company_id",
+                    companyId
+                )
+                .order(
+                    "created_at",
+                    {
+                        ascending: false
+                    }
+                );
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        orcamentos =
+            data || [];
+
+
+        mostrarOrcamentos(
+            orcamentos
+        );
+    }
+
+
+    function mostrarOrcamentos(lista) {
+
+        document.getElementById(
+            "contador"
+        ).textContent =
+            lista.length === 1
+                ? "1 orçamento"
+                : lista.length +
+                  " orçamentos";
+
+
+        if (
+            lista.length === 0
+        ) {
+
+            area.innerHTML = `
+                <div class="empty">
+
+                    Você ainda não possui orçamentos.
+
+                    <br><br>
+
+                    <a
+                        href="novo-orcamento.html"
+                        class="btn btn-primary"
+                    >
+                        Criar primeiro orçamento
+                    </a>
+
+                </div>
+            `;
+
+            return;
+        }
+
+
+        let html = `
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Nº</th>
+                        <th>Cliente</th>
+                        <th>Serviço</th>
+                        <th>Valor</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+        `;
+
+
+        lista.forEach(
+            function(orcamento) {
+
+                const cliente =
+                    orcamento.clients?.name ||
+                    "-";
+
+
+                html += `
+
+                    <tr>
+
+                        <td>
+                            #${orcamento.quote_number}
+                        </td>
+
+                        <td>
+                            ${escaparHTML(cliente)}
+                        </td>
+
+                        <td>
+                            ${escaparHTML(orcamento.title)}
+                        </td>
+
+                        <td>
+                            ${moeda(orcamento.total)}
+                        </td>
+
+                        <td>
+
+                            <span
+                                class="status ${orcamento.status}"
+                            >
+                                ${traduzirStatus(orcamento.status)}
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <div class="actions">
+
+                                <button
+                                    class="btn btn-secondary"
+                                    onclick="visualizarOrcamento('${orcamento.public_token}')"
+                                >
+                                    👁 Abrir
+                                </button>
+
+                                <button
+                                    class="btn btn-secondary"
+                                    onclick="copiarLink('${orcamento.public_token}')"
+                                >
+                                    🔗 Copiar link
+                                </button>
+
+                                <button
+                                    class="btn btn-whatsapp"
+                                    onclick="enviarWhatsApp('${orcamento.id}')"
+                                >
+                                    📲 WhatsApp
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                `;
+            }
+        );
+
+
+        html += `
+
+                </tbody>
+
+            </table>
+
+        `;
+
+
+        area.innerHTML =
+            html;
+    }
+
+
+    function visualizarOrcamento(
+        token
+    ) {
+
+        const link =
+            criarLinkPublico(
+                token
+            );
+
+
+        window.open(
+            link,
+            "_blank"
+        );
+    }
+
+
+    async function copiarLink(
+        token
+    ) {
+
+        const link =
+            criarLinkPublico(
+                token
+            );
+
+
+        try {
+
+            await navigator
+                .clipboard
+                .writeText(
+                    link
+                );
+
+
+            mostrarMensagem(
+                "Link copiado!",
+                "success"
+            );
+
+
+        } catch(error) {
+
+            console.error(error);
+
+
+            prompt(
+                "Copie o link abaixo:",
+                link
+            );
+        }
+    }
+
+
+    async function enviarWhatsApp(
+        quoteId
+    ) {
+
+        const quote =
+            orcamentos.find(
+                item =>
+                    item.id === quoteId
+            );
+
+
+        if (!quote) {
+            return;
+        }
+
+
+        const cliente =
+            quote.clients;
+
+
+        if (
+            !cliente ||
+            !cliente.phone
+        ) {
+
+            alert(
+                "Esse cliente não possui WhatsApp cadastrado."
+            );
+
+            return;
+        }
+
+
+        const link =
+            criarLinkPublico(
+                quote.public_token
+            );
+
+
+        /*
+            SE AINDA FOR RASCUNHO,
+            MARCA COMO ENVIADO
+        */
+
+        if (
+            quote.status === "draft"
+        ) {
+
+            const {
+                error
+            } =
+                await supabaseClient
+                    .from("quotes")
+                    .update({
+                        status:
+                            "sent",
+
+                        updated_at:
+                            new Date()
+                            .toISOString()
+                    })
+                    .eq(
+                        "id",
+                        quote.id
+                    )
+                    .eq(
+                        "company_id",
+                        companyId
+                    );
+
+
+            if (error) {
+
+                console.error(
+                    error
+                );
+
+            } else {
+
+                quote.status =
+                    "sent";
+
+                mostrarOrcamentos(
+                    orcamentos
+                );
+            }
+        }
+
+
+        let telefone =
+            String(
+                cliente.phone
+            )
+            .replace(
+                /\D/g,
+                ""
+            );
+
+
+        /*
+            ADICIONA BRASIL
+            CASO NECESSÁRIO
+        */
+
+        if (
+            telefone.length === 10 ||
+            telefone.length === 11
+        ) {
+
+            telefone =
+                "55" +
+                telefone;
+        }
+
+
+        const texto =
+            `Olá, ${cliente.name}! Tudo bem?
+
+Segue o orçamento #${quote.quote_number} referente a ${quote.title}.
+
+Valor: ${moeda(quote.total)}
+
+Você pode visualizar todos os detalhes e aceitar ou recusar através deste link:
+
+${link}
+
+Qualquer dúvida estou à disposição.`;
+
+
+        const urlWhatsApp =
+            "https://wa.me/" +
+            telefone +
+            "?text=" +
+            encodeURIComponent(
+                texto
+            );
+
+
+        window.open(
+            urlWhatsApp,
+            "_blank"
+        );
+    }
+
+
+    document.getElementById(
+        "pesquisa"
+    ).addEventListener(
+        "input",
+        function(event) {
+
+            const termo =
+                event.target.value
+                .trim()
+                .toLowerCase();
+
+
+            if (!termo) {
+
+                mostrarOrcamentos(
+                    orcamentos
+                );
+
+                return;
+            }
+
+
+            const filtrados =
+                orcamentos.filter(
+                    function(item) {
+
+                        const cliente =
+                            item.clients?.name ||
+                            "";
+
+
+                        return (
+                            cliente
+                                .toLowerCase()
+                                .includes(termo)
+
+                            ||
+
+                            (
+                                item.title ||
+                                ""
+                            )
+                            .toLowerCase()
+                            .includes(termo)
+                        );
+                    }
+                );
+
+
+            mostrarOrcamentos(
+                filtrados
+            );
+        }
+    );
+
+
+    document.getElementById(
+        "logoutBtn"
+    ).addEventListener(
+        "click",
+        async function() {
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+
+            window.location.href =
+                "login.html";
+        }
+    );
+
+
+    iniciarPagina();
+
+</script>
+
+</body>
+</html>

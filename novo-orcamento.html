@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Novo orçamento — OrçaZap</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f8f6;
+            color: #13261d;
+        }
+
+        .app {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 240px;
+            background: white;
+            border-right: 1px solid #e1e9e4;
+            padding: 24px 18px;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 21px;
+            font-weight: bold;
+            color: #087f4f;
+            margin-bottom: 35px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #08a865;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu a {
+            display: block;
+            text-decoration: none;
+            color: #4f665b;
+            padding: 12px 13px;
+            border-radius: 9px;
+            margin-bottom: 7px;
+            font-size: 14px;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background: #e8f8ef;
+            color: #087f4f;
+            font-weight: bold;
+        }
+
+        .logout {
+            position: absolute;
+            bottom: 25px;
+            left: 18px;
+            right: 18px;
+        }
+
+        .logout button {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #dce7e1;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #a33;
+            font-weight: bold;
+        }
+
+        /* CONTEÚDO */
+
+        .content {
+            margin-left: 240px;
+            width: calc(100% - 240px);
+        }
+
+        .topbar {
+            height: 75px;
+            padding: 0 35px;
+            background: white;
+            border-bottom: 1px solid #e1e9e4;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .company-name {
+            font-size: 14px;
+            color: #5d7167;
+        }
+
+        .user-email {
+            font-size: 13px;
+            color: #718078;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: auto;
+            padding: 35px;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 30px;
+            margin-bottom: 7px;
+        }
+
+        .page-header p {
+            color: #718078;
+        }
+
+        /* CARDS */
+
+        .card {
+            background: white;
+            border: 1px solid #e0e8e3;
+            border-radius: 14px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        /* FORM */
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 13px;
+            border: 1px solid #d8e4dd;
+            border-radius: 8px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            outline: none;
+            background: white;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #08a865;
+            box-shadow: 0 0 0 3px rgba(8,168,101,.10);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        /* ITENS */
+
+        .items-header {
+            display: grid;
+            grid-template-columns: 1fr 100px 150px 130px 45px;
+            gap: 10px;
+            margin-bottom: 8px;
+            padding: 0 5px;
+        }
+
+        .items-header span {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #718078;
+            font-weight: bold;
+        }
+
+        .item-row {
+            display: grid;
+            grid-template-columns: 1fr 100px 150px 130px 45px;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .item-total {
+            background: #f5f8f6;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: right;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .remove-item {
+            border: none;
+            background: #fff1f1;
+            color: #b42318;
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .add-item {
+            border: 1px dashed #08a865;
+            background: #f3fcf7;
+            color: #087f4f;
+            padding: 11px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        /* TOTAL */
+
+        .summary {
+            margin-left: auto;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #edf1ef;
+        }
+
+        .summary-row span {
+            color: #718078;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 17px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .discount-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .discount-area input {
+            width: 130px;
+            text-align: right;
+        }
+
+        /* BOTÕES */
+
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 9px;
+            padding: 13px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: #08a865;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #078c55;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #17352a;
+            border: 1px solid #dbe6e0;
+        }
+
+        .btn:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .message {
+            display: none;
+            padding: 13px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .message.error {
+            display: block;
+            background: #fff1f1;
+            color: #b42318;
+            border: 1px solid #ffd5d5;
+        }
+
+        .message.success {
+            display: block;
+            background: #eafaf1;
+            color: #087f4f;
+            border: 1px solid #c8eed9;
+        }
+
+        @media(max-width:900px) {
+
+            .sidebar {
+                display: none;
+            }
+
+            .content {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+
+        @media(max-width:700px) {
+
+            main {
+                padding: 22px 15px;
+            }
+
+            .topbar {
+                padding: 0 15px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .items-header {
+                display: none;
+            }
+
+            .item-row {
+                grid-template-columns: 1fr 80px;
+                background: #f8fbf9;
+                padding: 12px;
+                border-radius: 10px;
+            }
+
+            .item-row .item-description {
+                grid-column: span 2;
+            }
+
+            .item-row .item-price {
+                grid-column: span 2;
+            }
+
+            .item-total {
+                text-align: left;
+            }
+
+            .summary {
+                max-width: 100%;
+            }
+
+            .actions {
+                flex-direction: column-reverse;
+            }
+
+            .actions .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-icon">O</div>
+            OrçaZap
+        </div>
+
+        <nav class="menu">
+
+            <a href="dashboard.html">
+                📊 Dashboard
+            </a>
+
+            <a href="clientes.html">
+                👥 Clientes
+            </a>
+
+            <a href="orcamentos.html">
+                📄 Orçamentos
+            </a>
+
+            <a
+                href="novo-orcamento.html"
+                class="active"
+            >
+                ➕ Novo orçamento
+            </a>
+
+            <a href="#">
+                ⚙️ Configurações
+            </a>
+
+        </nav>
+
+        <div class="logout">
+
+            <button id="logoutBtn">
+                Sair da conta
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <div class="content">
+
+        <header class="topbar">
+
+            <div
+                class="company-name"
+                id="companyName"
+            >
+                Carregando empresa...
+            </div>
+
+            <div
+                class="user-email"
+                id="userEmail"
+            ></div>
+
+        </header>
+
+
+        <main>
+
+            <div class="page-header">
+
+                <h1>Novo orçamento</h1>
+
+                <p>
+                    Crie uma proposta profissional para seu cliente.
+                </p>
+
+            </div>
+
+
+            <div
+                id="mensagem"
+                class="message"
+            ></div>
+
+
+            <form id="orcamentoForm">
+
+                <!-- CLIENTE -->
+
+                <section class="card">
+
+                    <h2>Cliente</h2>
+
+                    <div class="form-group">
+
+                        <label for="cliente">
+                            Selecione o cliente *
+                        </label>
+
+                        <select
+                            id="cliente"
+                            required
+                        >
+
+                            <option value="">
+                                Carregando clientes...
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </section>
+
+
+                <!-- DADOS -->
+
+                <section class="card">
+
+                    <h2>Informações do orçamento</h2>
+
+                    <div class="form-group">
+
+                        <label for="titulo">
+                            Título do serviço *
+                        </label>
+
+                        <input
+                            id="titulo"
+                            type="text"
+                            placeholder="Ex.: Instalação elétrica residencial"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="descricao">
+                            Descrição
+                        </label>
+
+                        <textarea
+                            id="descricao"
+                            placeholder="Descreva brevemente o serviço..."
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="grid">
+
+                        <div class="form-group">
+
+                            <label for="validade">
+                                Validade do orçamento
+                            </label>
+
+                            <select id="validade">
+
+                                <option value="3">
+                                    3 dias
+                                </option>
+
+                                <option
+                                    value="7"
+                                    selected
+                                >
+                                    7 dias
+                                </option>
+
+                                <option value="15">
+                                    15 dias
+                                </option>
+
+                                <option value="30">
+                                    30 dias
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="pagamento">
+                                Forma de pagamento
+                            </label>
+
+                            <input
+                                id="pagamento"
+                                type="text"
+                                placeholder="Ex.: PIX, dinheiro ou cartão"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ITENS -->
+
+                <section class="card">
+
+                    <h2>Itens do orçamento</h2>
+
+
+                    <div class="items-header">
+
+                        <span>Descrição</span>
+
+                        <span>Qtd.</span>
+
+                        <span>Valor unit.</span>
+
+                        <span>Total</span>
+
+                        <span></span>
+
+                    </div>
+
+
+                    <div id="itemsContainer">
+                    </div>
+
+
+                    <button
+                        type="button"
+                        id="addItemBtn"
+                        class="add-item"
+                    >
+                        + Adicionar item
+                    </button>
+
+                </section>
+
+
+                <!-- OBSERVAÇÕES -->
+
+                <section class="card">
+
+                    <h2>Observações</h2>
+
+                    <textarea
+                        id="observacoes"
+                        placeholder="Ex.: Materiais inclusos, prazo de execução, garantias..."
+                    ></textarea>
+
+                </section>
+
+
+                <!-- VALORES -->
+
+                <section class="card">
+
+                    <div class="summary">
+
+                        <div class="summary-row">
+
+                            <span>Subtotal</span>
+
+                            <strong id="subtotalTexto">
+                                R$ 0,00
+                            </strong>
+
+                        </div>
+
+
+                        <div class="summary-row">
+
+                            <span>Desconto</span>
+
+                            <div class="discount-area">
+
+                                <span>R$</span>
+
+                                <input
+                                    id="desconto"
+                                    type="number"
+                                    min="0"
+                                    step="0.01"
+                                    value="0"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="summary-total">
+
+                            <span>Total</span>
+
+                            <span id="totalTexto">
+                                R$ 0,00
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="actions">
+
+                        <a
+                            href="dashboard.html"
+                            class="btn btn-secondary"
+                        >
+                            Cancelar
+                        </a>
+
+
+                        <button
+                            id="salvarBtn"
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            Salvar orçamento
+                        </button>
+
+                    </div>
+
+                </section>
+
+            </form>
+
+        </main>
+
+    </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+    /* ================================
+       SUPABASE
+    ================================= */
+
+    const SUPABASE_URL =
+        "https://kceprnuvyrtnmbmknnwj.supabase.co";
+
+    const SUPABASE_KEY =
+        "sb_publishable_aZPRlsOse9AxSJCjroHGRA_CaJlrNKo";
+
+
+    const supabaseClient =
+        supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
+
+    let companyId = null;
+
+
+    /* ================================
+       ELEMENTOS
+    ================================= */
+
+    const form =
+        document.getElementById(
+            "orcamentoForm"
+        );
+
+    const itemsContainer =
+        document.getElementById(
+            "itemsContainer"
+        );
+
+    const descontoInput =
+        document.getElementById(
+            "desconto"
+        );
+
+    const mensagem =
+        document.getElementById(
+            "mensagem"
+        );
+
+
+    /* ================================
+       FORMATAÇÃO
+    ================================= */
+
+    function moeda(valor) {
+
+        return Number(valor || 0)
+            .toLocaleString(
+                "pt-BR",
+                {
+                    style: "currency",
+                    currency: "BRL"
+                }
+            );
+    }
+
+
+    function mostrarMensagem(
+        texto,
+        tipo
+    ) {
+
+        mensagem.textContent = texto;
+
+        mensagem.className =
+            "message " + tipo;
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+
+    /* ================================
+       INICIAR
+    ================================= */
+
+    async function iniciarPagina() {
+
+        try {
+
+            const {
+                data: { user },
+                error: userError
+            } =
+                await supabaseClient
+                    .auth
+                    .getUser();
+
+
+            if (
+                userError ||
+                !user
+            ) {
+
+                window.location.href =
+                    "login.html";
+
+                return;
+            }
+
+
+            document.getElementById(
+                "userEmail"
+            ).textContent =
+                user.email;
+
+
+            const {
+                data: company,
+                error: companyError
+            } =
+                await supabaseClient
+                    .from("companies")
+                    .select("id, name")
+                    .eq(
+                        "user_id",
+                        user.id
+                    )
+                    .maybeSingle();
+
+
+            if (companyError) {
+                throw companyError;
+            }
+
+
+            if (!company) {
+
+                throw new Error(
+                    "Empresa não encontrada."
+                );
+            }
+
+
+            companyId =
+                company.id;
+
+
+            document.getElementById(
+                "companyName"
+            ).textContent =
+                company.name;
+
+
+            await carregarClientes();
+
+
+            adicionarItem();
+
+        } catch(error) {
+
+            console.error(error);
+
+            mostrarMensagem(
+                "Erro ao carregar a página: " +
+                error.message,
+                "error"
+            );
+        }
+    }
+
+
+    /* ================================
+       CLIENTES
+    ================================= */
+
+    async function carregarClientes() {
+
+        const select =
+            document.getElementById(
+                "cliente"
+            );
+
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from("clients")
+                .select(
+                    "id, name"
+                )
+                .eq(
+                    "company_id",
+                    companyId
+                )
+                .order(
+                    "name",
+                    {
+                        ascending: true
+                    }
+                );
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        select.innerHTML = `
+            <option value="">
+                Selecione um cliente
+            </option>
+        `;
+
+
+        if (
+            !data ||
+            data.length === 0
+        ) {
+
+            select.innerHTML = `
+                <option value="">
+                    Nenhum cliente cadastrado
+                </option>
+            `;
+
+            return;
+        }
+
+
+        data.forEach(
+            function(cliente) {
+
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+                option.value =
+                    cliente.id;
+
+                option.textContent =
+                    cliente.name;
+
+                select.appendChild(
+                    option
+                );
+            }
+        );
+    }
+
+
+    /* ================================
+       ITENS
+    ================================= */
+
+    function adicionarItem() {
+
+        const row =
+            document.createElement(
+                "div"
+            );
+
+
+        row.className =
+            "item-row";
+
+
+        row.innerHTML = `
+
+            <input
+                type="text"
+                class="item-description"
+                placeholder="Descrição do serviço ou produto"
+                required
+            >
+
+            <input
+                type="number"
+                class="item-quantity"
+                value="1"
+                min="0.01"
+                step="0.01"
+                required
+            >
+
+            <input
+                type="number"
+                class="item-price"
+                placeholder="0,00"
+                min="0"
+                step="0.01"
+                required
+            >
+
+            <div
+                class="item-total"
+            >
+                R$ 0,00
+            </div>
+
+            <button
+                type="button"
+                class="remove-item"
+                title="Remover item"
+            >
+                ×
+            </button>
+
+        `;
+
+
+        const quantidade =
+            row.querySelector(
+                ".item-quantity"
+            );
+
+
+        const preco =
+            row.querySelector(
+                ".item-price"
+            );
+
+
+        quantidade.addEventListener(
+            "input",
+            calcularTotais
+        );
+
+
+        preco.addEventListener(
+            "input",
+            calcularTotais
+        );
+
+
+        row.querySelector(
+            ".remove-item"
+        ).addEventListener(
+            "click",
+            function() {
+
+                const quantidadeItens =
+                    itemsContainer.querySelectorAll(
+                        ".item-row"
+                    ).length;
+
+
+                if (
+                    quantidadeItens === 1
+                ) {
+
+                    alert(
+                        "O orçamento precisa ter pelo menos um item."
+                    );
+
+                    return;
+                }
+
+
+                row.remove();
+
+                calcularTotais();
+            }
+        );
+
+
+        itemsContainer.appendChild(
+            row
+        );
+
+
+        calcularTotais();
+    }
+
+
+    document.getElementById(
+        "addItemBtn"
+    ).addEventListener(
+        "click",
+        adicionarItem
+    );
+
+
+    descontoInput.addEventListener(
+        "input",
+        calcularTotais
+    );
+
+
+    /* ================================
+       CÁLCULO
+    ================================= */
+
+    function calcularTotais() {
+
+        const rows =
+            itemsContainer.querySelectorAll(
+                ".item-row"
+            );
+
+
+        let subtotal = 0;
+
+
+        rows.forEach(
+            function(row) {
+
+                const quantidade =
+                    Number(
+                        row.querySelector(
+                            ".item-quantity"
+                        ).value
+                    ) || 0;
+
+
+                const preco =
+                    Number(
+                        row.querySelector(
+                            ".item-price"
+                        ).value
+                    ) || 0;
+
+
+                const total =
+                    quantidade *
+                    preco;
+
+
+                row.querySelector(
+                    ".item-total"
+                ).textContent =
+                    moeda(total);
+
+
+                subtotal +=
+                    total;
+            }
+        );
+
+
+        let desconto =
+            Number(
+                descontoInput.value
+            ) || 0;
+
+
+        if (
+            desconto < 0
+        ) {
+            desconto = 0;
+        }
+
+
+        if (
+            desconto > subtotal
+        ) {
+            desconto = subtotal;
+        }
+
+
+        const total =
+            subtotal -
+            desconto;
+
+
+        document.getElementById(
+            "subtotalTexto"
+        ).textContent =
+            moeda(subtotal);
+
+
+        document.getElementById(
+            "totalTexto"
+        ).textContent =
+            moeda(total);
+
+
+        return {
+            subtotal,
+            desconto,
+            total
+        };
+    }
+
+
+    /* ================================
+       PEGAR ITENS
+    ================================= */
+
+    function pegarItens() {
+
+        const rows =
+            itemsContainer.querySelectorAll(
+                ".item-row"
+            );
+
+
+        const itens = [];
+
+
+        rows.forEach(
+            function(row) {
+
+                const descricao =
+                    row.querySelector(
+                        ".item-description"
+                    ).value.trim();
+
+
+                const quantidade =
+                    Number(
+                        row.querySelector(
+                            ".item-quantity"
+                        ).value
+                    );
+
+
+                const preco =
+                    Number(
+                        row.querySelector(
+                            ".item-price"
+                        ).value
+                    );
+
+
+                if (
+                    descricao &&
+                    quantidade > 0
+                ) {
+
+                    itens.push({
+                        description:
+                            descricao,
+
+                        quantity:
+                            quantidade,
+
+                        unit_price:
+                            preco,
+
+                        total:
+                            quantidade *
+                            preco
+                    });
+                }
+            }
+        );
+
+
+        return itens;
+    }
+
+
+    /* ================================
+       SALVAR ORÇAMENTO
+    ================================= */
+
+    form.addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            const clienteId =
+                document.getElementById(
+                    "cliente"
+                ).value;
+
+
+            const titulo =
+                document.getElementById(
+                    "titulo"
+                ).value.trim();
+
+
+            const descricao =
+                document.getElementById(
+                    "descricao"
+                ).value.trim();
+
+
+            const validade =
+                Number(
+                    document.getElementById(
+                        "validade"
+                    ).value
+                );
+
+
+            const pagamento =
+                document.getElementById(
+                    "pagamento"
+                ).value.trim();
+
+
+            const observacoes =
+                document.getElementById(
+                    "observacoes"
+                ).value.trim();
+
+
+            const itens =
+                pegarItens();
+
+
+            if (!clienteId) {
+
+                mostrarMensagem(
+                    "Selecione um cliente.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (!titulo) {
+
+                mostrarMensagem(
+                    "Digite o título do serviço.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (
+                itens.length === 0
+            ) {
+
+                mostrarMensagem(
+                    "Adicione pelo menos um item válido ao orçamento.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            const valores =
+                calcularTotais();
+
+
+            const botao =
+                document.getElementById(
+                    "salvarBtn"
+                );
+
+
+            botao.disabled = true;
+
+            botao.textContent =
+                "Salvando...";
+
+
+            try {
+
+                /*
+                    CRIA O ORÇAMENTO
+                */
+
+                const {
+                    data: quote,
+                    error: quoteError
+                } =
+                    await supabaseClient
+                        .from("quotes")
+                        .insert({
+                            company_id:
+                                companyId,
+
+                            client_id:
+                                clienteId,
+
+                            title:
+                                titulo,
+
+                            description:
+                                descricao || null,
+
+                            subtotal:
+                                valores.subtotal,
+
+                            discount:
+                                valores.desconto,
+
+                            total:
+                                valores.total,
+
+                            validity_days:
+                                validade,
+
+                            payment_method:
+                                pagamento || null,
+
+                            notes:
+                                observacoes || null,
+
+                            status:
+                                "draft"
+                        })
+                        .select(
+                            "id, quote_number"
+                        )
+                        .single();
+
+
+                if (quoteError) {
+                    throw quoteError;
+                }
+
+
+                /*
+                    PREPARA OS ITENS
+                */
+
+                const itensParaSalvar =
+                    itens.map(
+                        function(item) {
+
+                            return {
+
+                                quote_id:
+                                    quote.id,
+
+                                description:
+                                    item.description,
+
+                                quantity:
+                                    item.quantity,
+
+                                unit_price:
+                                    item.unit_price,
+
+                                total:
+                                    item.total
+                            };
+                        }
+                    );
+
+
+                /*
+                    SALVA ITENS
+                */
+
+                const {
+                    error: itemsError
+                } =
+                    await supabaseClient
+                        .from(
+                            "quote_items"
+                        )
+                        .insert(
+                            itensParaSalvar
+                        );
+
+
+                if (itemsError) {
+
+                    /*
+                        SE DER ERRO NOS ITENS,
+                        APAGA O ORÇAMENTO
+                    */
+
+                    await supabaseClient
+                        .from("quotes")
+                        .delete()
+                        .eq(
+                            "id",
+                            quote.id
+                        );
+
+
+                    throw itemsError;
+                }
+
+
+                /*
+                    EVENTO
+                */
+
+                const {
+                    error: eventError
+                } =
+                    await supabaseClient
+                        .from(
+                            "quote_events"
+                        )
+                        .insert({
+                            quote_id:
+                                quote.id,
+
+                            event_type:
+                                "created"
+                        });
+
+
+                if (eventError) {
+
+                    console.error(
+                        "Erro ao registrar evento:",
+                        eventError
+                    );
+                }
+
+
+                mostrarMensagem(
+                    "Orçamento #" +
+                    quote.quote_number +
+                    " criado com sucesso!",
+                    "success"
+                );
+
+
+                setTimeout(
+                    function() {
+
+                        window.location.href =
+                            "dashboard.html";
+
+                    },
+                    1300
+                );
+
+
+            } catch(error) {
+
+                console.error(
+                    "Erro ao salvar orçamento:",
+                    error
+                );
+
+
+                mostrarMensagem(
+                    "Não foi possível salvar o orçamento: " +
+                    error.message,
+                    "error"
+                );
+
+
+            } finally {
+
+                botao.disabled = false;
+
+                botao.textContent =
+                    "Salvar orçamento";
+            }
+        }
+    );
+
+
+    /* ================================
+       LOGOUT
+    ================================= */
+
+    document.getElementById(
+        "logoutBtn"
+    ).addEventListener(
+        "click",
+        async function() {
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+
+            window.location.href =
+                "login.html";
+        }
+    );
+
+
+    /* ================================
+       INICIA
+    ================================= */
+
+    iniciarPagina();
+
+</script>
+
+
+</body>
+
+</html>

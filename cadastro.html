@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Criar conta — OrçaZap</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+            background: #f5faf7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+            color: #10251c;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 440px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .logo-icon {
+            width: 46px;
+            height: 46px;
+            margin: 0 auto 10px;
+            border-radius: 50%;
+            background: #08a865;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            color: #087f4f;
+        }
+
+        .logo p {
+            margin-top: 7px;
+            color: #718078;
+            font-size: 14px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e0eae4;
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.07);
+        }
+
+        .card h2 {
+            font-size: 25px;
+            margin-bottom: 8px;
+        }
+
+        .description {
+            color: #718078;
+            font-size: 14px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #d7e3dc;
+            border-radius: 9px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        input:focus {
+            border-color: #08a865;
+            box-shadow: 0 0 0 3px rgba(8,168,101,0.10);
+        }
+
+        .password-info {
+            color: #83918b;
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        .btn {
+            width: 100%;
+            border: none;
+            background: #08a865;
+            color: white;
+            padding: 14px;
+            border-radius: 9px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .btn:hover {
+            background: #078c55;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .message {
+            display: none;
+            margin-top: 18px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .message.error {
+            display: block;
+            background: #fff1f1;
+            color: #b42318;
+            border: 1px solid #ffd5d5;
+        }
+
+        .message.success {
+            display: block;
+            background: #eafaf1;
+            color: #087f4f;
+            border: 1px solid #c8eed9;
+        }
+
+        .terms {
+            margin-top: 16px;
+            text-align: center;
+            color: #7a8881;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .login {
+            text-align: center;
+            margin-top: 22px;
+            font-size: 14px;
+            color: #687870;
+        }
+
+        .login a {
+            color: #078c55;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #718078;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        @media (max-width: 500px) {
+            .card {
+                padding: 25px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">
+        <div class="logo-icon">O</div>
+
+        <h1>OrçaZap</h1>
+
+        <p>Seu orçamento profissional, direto no WhatsApp.</p>
+    </div>
+
+    <div class="card">
+
+        <h2>Crie sua conta</h2>
+
+        <p class="description">
+            Comece gratuitamente e crie seus primeiros orçamentos profissionais.
+        </p>
+
+        <form id="cadastroForm">
+
+            <div class="form-group">
+                <label for="nome">Nome completo</label>
+
+                <input
+                    type="text"
+                    id="nome"
+                    placeholder="Ex.: João da Silva"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="empresa">Nome da empresa ou negócio</label>
+
+                <input
+                    type="text"
+                    id="empresa"
+                    placeholder="Ex.: João Instalações"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="telefone">WhatsApp</label>
+
+                <input
+                    type="tel"
+                    id="telefone"
+                    placeholder="(14) 99999-9999"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="email">E-mail</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="voce@email.com"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="senha">Senha</label>
+
+                <input
+                    type="password"
+                    id="senha"
+                    placeholder="Crie uma senha"
+                    minlength="6"
+                    required
+                >
+
+                <div class="password-info">
+                    A senha deve ter pelo menos 6 caracteres.
+                </div>
+            </div>
+
+            <button type="submit" class="btn">
+                Criar minha conta
+            </button>
+
+        </form>
+
+        <div id="mensagem" class="message"></div>
+
+        <div class="terms">
+            Ao criar sua conta, você concorda com nossos
+            termos de uso e política de privacidade.
+        </div>
+
+        <div class="login">
+            Já possui uma conta?
+            <a href="login.html">Entrar</a>
+        </div>
+
+    </div>
+
+    <a href="index.html" class="back">
+        ← Voltar para o início
+    </a>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+    const SUPABASE_URL = "https://kceprnuvyrtnmbmknnwj.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_aZPRlsOse9AxSJCjroHGRA_CaJlrNKo";
+
+    const supabaseClient = supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+    const cadastroForm = document.getElementById("cadastroForm");
+    const mensagem = document.getElementById("mensagem");
+
+    function mostrarMensagem(texto, tipo) {
+        mensagem.textContent = texto;
+        mensagem.className = "message " + tipo;
+    }
+
+    cadastroForm.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        mensagem.className = "message";
+        mensagem.textContent = "";
+
+        const nome = document.getElementById("nome").value.trim();
+        const empresa = document.getElementById("empresa").value.trim();
+        const telefone = document.getElementById("telefone").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const senha = document.getElementById("senha").value;
+
+        const botao = cadastroForm.querySelector("button[type='submit']");
+
+        if (senha.length < 6) {
+            mostrarMensagem(
+                "Sua senha precisa ter pelo menos 6 caracteres.",
+                "error"
+            );
+            return;
+        }
+
+        botao.disabled = true;
+        botao.textContent = "Criando conta...";
+
+        try {
+
+            const { data, error } = await supabaseClient.auth.signUp({
+                email: email,
+                password: senha,
+
+                options: {
+                    data: {
+                        name: nome,
+                        company_name: empresa,
+                        phone: telefone
+                    }
+                }
+            });
+
+            if (error) {
+                throw error;
+            }
+
+            console.log("Cadastro realizado:", data);
+
+            if (data.session) {
+
+                mostrarMensagem(
+                    "Conta criada com sucesso! Entrando no sistema...",
+                    "success"
+                );
+
+                setTimeout(function() {
+                    window.location.href = "dashboard.html";
+                }, 1500);
+
+            } else {
+
+                mostrarMensagem(
+                    "Conta criada! Verifique seu e-mail para confirmar o cadastro.",
+                    "success"
+                );
+
+                setTimeout(function() {
+                    window.location.href = "login.html";
+                }, 3000);
+            }
+
+        } catch (error) {
+
+            console.error("Erro no cadastro:", error);
+
+            let textoErro = error.message;
+
+            if (
+                error.message &&
+                error.message.toLowerCase().includes("already registered")
+            ) {
+                textoErro = "Este e-mail já possui uma conta.";
+            }
+
+            mostrarMensagem(
+                "Não foi possível criar sua conta: " + textoErro,
+                "error"
+            );
+
+        } finally {
+
+            botao.disabled = false;
+            botao.textContent = "Criar minha conta";
+        }
+    });
+</script>
+
+</body>
+</html>
