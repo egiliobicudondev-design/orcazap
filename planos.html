@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Planos — OrçaZap</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f8f6;
+            color: #13261d;
+        }
+
+        .app {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: #ffffff;
+            border-right: 1px solid #e1e9e4;
+            padding: 24px 18px;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 21px;
+            font-weight: bold;
+            color: #087f4f;
+            margin-bottom: 35px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #08a865;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu a {
+            display: block;
+            text-decoration: none;
+            color: #4f665b;
+            padding: 12px 13px;
+            border-radius: 9px;
+            margin-bottom: 7px;
+            font-size: 14px;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background: #e8f8ef;
+            color: #087f4f;
+            font-weight: bold;
+        }
+
+        .logout {
+            position: absolute;
+            bottom: 25px;
+            left: 18px;
+            right: 18px;
+        }
+
+        .logout button {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #dce7e1;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #a33;
+            font-weight: bold;
+        }
+
+        .content {
+            margin-left: 240px;
+            width: calc(100% - 240px);
+        }
+
+        .topbar {
+            height: 75px;
+            padding: 0 35px;
+            background: white;
+            border-bottom: 1px solid #e1e9e4;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .company-name {
+            font-size: 14px;
+            color: #5d7167;
+        }
+
+        .user-email {
+            font-size: 13px;
+            color: #718078;
+        }
+
+        main {
+            max-width: 1120px;
+            margin: auto;
+            padding: 42px 35px 60px;
+        }
+
+        .hero {
+            text-align: center;
+            max-width: 720px;
+            margin: 0 auto 34px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 30px;
+            background: #e8f8ef;
+            color: #087f4f;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 14px;
+        }
+
+        .hero h1 {
+            font-size: 34px;
+            line-height: 1.15;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            color: #718078;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .current-summary {
+            max-width: 720px;
+            margin: 0 auto 28px;
+            background: white;
+            border: 1px solid #e0e8e3;
+            border-radius: 14px;
+            padding: 16px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .current-summary strong {
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .current-summary span {
+            color: #718078;
+            font-size: 13px;
+        }
+
+        .current-plan-badge {
+            padding: 7px 11px;
+            border-radius: 20px;
+            background: #edf2ef;
+            color: #4f665b;
+            font-weight: bold;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .current-plan-badge.pro {
+            background: #e8f8ef;
+            color: #087f4f;
+        }
+
+        .plans {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 22px;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .plan-card {
+            position: relative;
+            background: white;
+            border: 1px solid #e0e8e3;
+            border-radius: 18px;
+            padding: 28px;
+            min-height: 520px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .plan-card.pro {
+            border: 2px solid #08a865;
+            box-shadow: 0 14px 40px rgba(8, 168, 101, .10);
+        }
+
+        .popular {
+            position: absolute;
+            top: -13px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #08a865;
+            color: white;
+            border-radius: 30px;
+            padding: 7px 13px;
+            font-size: 11px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .plan-name {
+            font-size: 20px;
+            margin-bottom: 6px;
+        }
+
+        .plan-subtitle {
+            color: #718078;
+            font-size: 13px;
+            min-height: 38px;
+        }
+
+        .price {
+            margin: 24px 0 8px;
+            display: flex;
+            align-items: flex-end;
+            gap: 5px;
+        }
+
+        .price strong {
+            font-size: 38px;
+            letter-spacing: -1px;
+        }
+
+        .price span {
+            color: #718078;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .usage {
+            background: #f5f8f6;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 12px;
+            color: #5d7167;
+            margin: 12px 0 20px;
+        }
+
+        .features {
+            list-style: none;
+            margin: 3px 0 24px;
+            flex: 1;
+        }
+
+        .features li {
+            padding: 9px 0;
+            border-bottom: 1px solid #edf1ef;
+            font-size: 14px;
+            color: #42594e;
+        }
+
+        .features li:last-child {
+            border-bottom: none;
+        }
+
+        .check {
+            color: #08a865;
+            font-weight: bold;
+            margin-right: 7px;
+        }
+
+        .btn {
+            width: 100%;
+            border: none;
+            border-radius: 10px;
+            padding: 13px 16px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .btn-free {
+            background: #edf2ef;
+            color: #4f665b;
+        }
+
+        .btn-free:disabled {
+            cursor: default;
+        }
+
+        .btn-pro {
+            background: #08a865;
+            color: white;
+        }
+
+        .btn-pro:hover {
+            background: #078c55;
+        }
+
+        .btn-pro:disabled {
+            opacity: .65;
+            cursor: default;
+        }
+
+        .footnote {
+            text-align: center;
+            color: #829188;
+            font-size: 12px;
+            margin-top: 24px;
+        }
+
+        .message {
+            max-width: 900px;
+            margin: 0 auto 20px;
+            display: none;
+            padding: 13px 15px;
+            border-radius: 10px;
+            font-size: 13px;
+        }
+
+        .message.error {
+            display: block;
+            background: #fff1f1;
+            color: #b42318;
+            border: 1px solid #ffd5d5;
+        }
+
+        .message.info {
+            display: block;
+            background: #eef8f3;
+            color: #087f4f;
+            border: 1px solid #ccebdc;
+        }
+
+        @media(max-width: 900px) {
+            .sidebar {
+                display: none;
+            }
+
+            .content {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+
+        @media(max-width: 700px) {
+            main {
+                padding: 30px 15px 50px;
+            }
+
+            .topbar {
+                padding: 0 15px;
+            }
+
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .plans {
+                grid-template-columns: 1fr;
+            }
+
+            .current-summary {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-icon">O</div>
+            OrçaZap
+        </div>
+
+        <nav class="menu">
+            <a href="dashboard.html">📊 Dashboard</a>
+            <a href="clientes.html">👥 Clientes</a>
+            <a href="orcamentos.html">📄 Orçamentos</a>
+            <a href="novo-orcamento.html">➕ Novo orçamento</a>
+            <a href="planos.html" class="active">🚀 Planos</a>
+            <a href="configuracoes.html">⚙️ Configurações</a>
+        </nav>
+
+        <div class="logout">
+            <button id="logoutBtn">Sair da conta</button>
+        </div>
+
+    </aside>
+
+    <div class="content">
+
+        <header class="topbar">
+
+            <div
+                class="company-name"
+                id="companyName"
+            >
+                Carregando empresa...
+            </div>
+
+            <div
+                class="user-email"
+                id="userEmail"
+            ></div>
+
+        </header>
+
+        <main>
+
+            <section class="hero">
+
+                <span class="hero-badge">
+                    Planos OrçaZap
+                </span>
+
+                <h1>
+                    Escolha o plano ideal para o seu negócio
+                </h1>
+
+                <p>
+                    Comece gratuitamente e passe para o Pro
+                    quando precisar criar mais orçamentos.
+                </p>
+
+            </section>
+
+            <div
+                id="message"
+                class="message"
+            ></div>
+
+            <section
+                class="current-summary"
+                id="currentSummary"
+            >
+                <div>
+                    <strong>Seu plano atual</strong>
+                    <span id="currentUsage">
+                        Carregando informações...
+                    </span>
+                </div>
+
+                <div
+                    class="current-plan-badge"
+                    id="currentPlanBadge"
+                >
+                    Carregando...
+                </div>
+            </section>
+
+            <section class="plans">
+
+                <article class="plan-card">
+
+                    <h2 class="plan-name">
+                        Gratuito
+                    </h2>
+
+                    <p class="plan-subtitle">
+                        Para começar a usar o OrçaZap
+                        sem pagar nada.
+                    </p>
+
+                    <div class="price">
+                        <strong>R$ 0</strong>
+                        <span>/mês</span>
+                    </div>
+
+                    <div
+                        class="usage"
+                        id="freeUsage"
+                    >
+                        Até 5 orçamentos por mês
+                    </div>
+
+                    <ul class="features">
+                        <li>
+                            <span class="check">✓</span>
+                            Até 5 orçamentos por mês
+                        </li>
+
+                        <li>
+                            <span class="check">✓</span>
+                            Cadastro de clientes
+                        </li>
+
+                        <li>
+                            <span class="check">✓</span>
+                            Envio por WhatsApp
+                        </li>
+
+                        <li>
+                            <span class="check">✓</span>
+                            Link público do orçamento
+                        </li>
+
+                        <li>
+                            <span class="check">✓</span>
+                            Aceite ou recusa pelo cliente
+                        </li>
+
+                        <li>
+                            <span class="check">✓</span>
+                            Acompanhamento de status
+                        </li>
+                    </ul>
+
+                    <button
+                        class="btn btn-free"
+                        id="freeBtn"
+                        type="button"
+                        disabled
+                    >
+                        Plano atual
+                    </button>
+
+                </article>
+
+                <article class="plan-card pro">
+
+                    <div class="popular">
+                        MAIS COMPLETO
+                    </div>
+
+                    <h2 class="plan-name">
+                        Pro
+                    </h2>
+
+                    <p class="plan-subtitle">
+                        Para quem usa o OrçaZap todos os dias
+                        e quer crescer sem limite.
+                    </p>
+
+                    <div class="price">
+                        <strong>R$ 29,90</strong>
+                        <span>/mês</span>
+                    </div>
+
+                    <div class="usage">
+                        Orçamentos ilimitados
+                    </div>
+
+                    <ul class="features">
+                        <li>
+                            <span class="check">✓</span>
+                            Orçamentos ilimitados
+                        </li>
+
+                        <li>
+                            <span class="check">✓</span>
+                            Clientes ilimitados
+                        </li>
+
+                        <li>
+                            <span class="check">✓</span>
+                            Envio por WhatsApp
+                        </li>
+
+                        <li>
+                            <span class="check">✓</span>
+                            Logo personalizada
+                        </li>
+
+                        <li>
+                            <span class="check">✓</span>
+                            Chave PIX no orçamento
+                        </li>
+
+                        <li>
+                            <span class="check">✓</span>
+                            Acompanhamento de visualização e aprovação
+                        </li>
+
+                        <li>
+                            <span class="check">✓</span>
+                            Sem limite mensal de orçamentos
+                        </li>
+                    </ul>
+
+                    <button
+                        class="btn btn-pro"
+                        id="proBtn"
+                        type="button"
+                    >
+                        🚀 Quero o Pro
+                    </button>
+
+                </article>
+
+            </section>
+
+            <p class="footnote">
+                A cobrança do plano Pro será ativada na próxima etapa.
+            </p>
+
+        </main>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+    const SUPABASE_URL =
+        "https://kceprnuvyrtnmbmknnwj.supabase.co";
+
+    const SUPABASE_KEY =
+        "sb_publishable_aZPRlsOse9AxSJCjroHGRA_CaJlrNKo";
+
+    const supabaseClient =
+        supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
+    let companyAtual = null;
+
+    function mostrarMensagem(
+        texto,
+        tipo = "info"
+    ) {
+        const message =
+            document.getElementById(
+                "message"
+            );
+
+        message.textContent =
+            texto;
+
+        message.className =
+            "message " + tipo;
+    }
+
+    function obterInicioMesSaoPaulo() {
+        const partes =
+            new Intl.DateTimeFormat(
+                "en-CA",
+                {
+                    timeZone:
+                        "America/Sao_Paulo",
+                    year:
+                        "numeric",
+                    month:
+                        "2-digit"
+                }
+            )
+            .formatToParts(
+                new Date()
+            );
+
+        const ano =
+            partes.find(
+                parte =>
+                    parte.type === "year"
+            ).value;
+
+        const mes =
+            partes.find(
+                parte =>
+                    parte.type === "month"
+            ).value;
+
+        return (
+            ano +
+            "-" +
+            mes +
+            "-01"
+        );
+    }
+
+    async function carregarPagina() {
+        try {
+            const {
+                data: { user },
+                error: userError
+            } =
+                await supabaseClient
+                    .auth
+                    .getUser();
+
+            if (
+                userError ||
+                !user
+            ) {
+                window.location.href =
+                    "login.html";
+
+                return;
+            }
+
+            document.getElementById(
+                "userEmail"
+            ).textContent =
+                user.email;
+
+            const {
+                data: company,
+                error: companyError
+            } =
+                await supabaseClient
+                    .from(
+                        "companies"
+                    )
+                    .select(`
+                        id,
+                        name,
+                        plan,
+                        monthly_quote_limit
+                    `)
+                    .eq(
+                        "user_id",
+                        user.id
+                    )
+                    .maybeSingle();
+
+            if (companyError) {
+                throw companyError;
+            }
+
+            if (!company) {
+                throw new Error(
+                    "Empresa não encontrada."
+                );
+            }
+
+            companyAtual =
+                company;
+
+            document.getElementById(
+                "companyName"
+            ).textContent =
+                company.name;
+
+            await atualizarPlanoNaTela(
+                company
+            );
+
+        } catch (error) {
+            console.error(
+                "Erro ao carregar planos:",
+                error
+            );
+
+            mostrarMensagem(
+                "Não foi possível carregar os planos: " +
+                (
+                    error.message ||
+                    "erro desconhecido"
+                ),
+                "error"
+            );
+        }
+    }
+
+    async function atualizarPlanoNaTela(
+        company
+    ) {
+        const badge =
+            document.getElementById(
+                "currentPlanBadge"
+            );
+
+        const usageText =
+            document.getElementById(
+                "currentUsage"
+            );
+
+        const freeUsage =
+            document.getElementById(
+                "freeUsage"
+            );
+
+        const freeBtn =
+            document.getElementById(
+                "freeBtn"
+            );
+
+        const proBtn =
+            document.getElementById(
+                "proBtn"
+            );
+
+        if (
+            company.plan === "pro"
+        ) {
+            badge.textContent =
+                "⭐ Pro";
+
+            badge.className =
+                "current-plan-badge pro";
+
+            usageText.textContent =
+                "Orçamentos ilimitados.";
+
+            freeUsage.textContent =
+                "Plano gratuito disponível";
+
+            freeBtn.textContent =
+                "Plano Gratuito";
+
+            proBtn.textContent =
+                "✓ Plano atual";
+
+            proBtn.disabled =
+                true;
+
+            return;
+        }
+
+        const limite =
+            Number(
+                company.monthly_quote_limit || 5
+            );
+
+        const {
+            data: usage,
+            error: usageError
+        } =
+            await supabaseClient
+                .from(
+                    "quote_usage_monthly"
+                )
+                .select(
+                    "quotes_created"
+                )
+                .eq(
+                    "company_id",
+                    company.id
+                )
+                .eq(
+                    "month_start",
+                    obterInicioMesSaoPaulo()
+                )
+                .maybeSingle();
+
+        if (usageError) {
+            throw usageError;
+        }
+
+        const usados =
+            Number(
+                usage?.quotes_created || 0
+            );
+
+        const restantes =
+            Math.max(
+                0,
+                limite - usados
+            );
+
+        badge.textContent =
+            "🆓 Gratuito";
+
+        badge.className =
+            "current-plan-badge";
+
+        usageText.textContent =
+            usados +
+            " de " +
+            limite +
+            " orçamentos usados neste mês.";
+
+        freeUsage.textContent =
+            restantes > 0
+                ? "Restam " +
+                    restantes +
+                    " orçamento" +
+                    (
+                        restantes === 1
+                            ? ""
+                            : "s"
+                    ) +
+                    " neste mês"
+                : "Limite mensal atingido";
+
+        freeBtn.textContent =
+            "✓ Plano atual";
+    }
+
+    function irParaPro() {
+        /*
+           Na próxima etapa vamos trocar isso
+           pelo checkout/pagamento real.
+        */
+
+        mostrarMensagem(
+            "Perfeito! Na próxima etapa vamos conectar o pagamento do OrçaZap Pro.",
+            "info"
+        );
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+    document
+        .getElementById(
+            "proBtn"
+        )
+        .addEventListener(
+            "click",
+            irParaPro
+        );
+
+    document
+        .getElementById(
+            "logoutBtn"
+        )
+        .addEventListener(
+            "click",
+            async function() {
+                await supabaseClient
+                    .auth
+                    .signOut();
+
+                window.location.href =
+                    "login.html";
+            }
+        );
+
+    carregarPagina();
+</script>
+
+</body>
+</html>
