@@ -2647,198 +2647,237 @@
 
     async function salvarOrcamento() {
 
-
-        mensagem.className =
-            "message";
-
-
-        mensagem.textContent =
-            "";
+    mensagem.className =
+        "message";
 
 
-        const clienteId =
+    mensagem.textContent =
+        "";
+
+
+    const clienteId =
+        document.getElementById(
+            "cliente"
+        ).value;
+
+
+    const titulo =
+        document.getElementById(
+            "titulo"
+        ).value.trim();
+
+
+    const descricao =
+        document.getElementById(
+            "descricao"
+        ).value.trim();
+
+
+    const validade =
+        numero(
             document.getElementById(
-                "cliente"
-            ).value;
+                "validade"
+            ).value
+        );
 
 
-        const titulo =
-            document.getElementById(
-                "titulo"
-            ).value.trim();
+    const pagamento =
+        document.getElementById(
+            "pagamento"
+        ).value.trim();
 
 
-        const descricao =
-            document.getElementById(
-                "descricao"
-            ).value.trim();
+    const observacoes =
+        document.getElementById(
+            "observacoes"
+        ).value.trim();
 
 
-        const validade =
-            numero(
-                document.getElementById(
-                    "validade"
-                ).value
+    /* ============================
+       VALIDAÇÕES
+    ============================ */
+
+    if (!clienteId) {
+
+        mostrarMensagem(
+            "Selecione um cliente.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if (!titulo) {
+
+        mostrarMensagem(
+            "Digite o título do orçamento.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const itens =
+        pegarItens();
+
+
+    if (
+        !itens ||
+        itens.length === 0
+    ) {
+
+        mostrarMensagem(
+            "Preencha corretamente os itens do orçamento.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const totais =
+        calcularTotais();
+
+
+    const dados = {
+
+        client_id:
+            clienteId,
+
+        title:
+            titulo,
+
+        description:
+            descricao,
+
+        subtotal:
+            totais.subtotal,
+
+        discount:
+            totais.desconto,
+
+        total:
+            totais.total,
+
+        validity_days:
+            validade,
+
+        payment_method:
+            pagamento,
+
+        notes:
+            observacoes
+    };
+
+
+    /* ============================
+       BLOQUEIA BOTÃO
+    ============================ */
+
+    salvarBtn.disabled =
+        true;
+
+
+    salvarBtn.textContent =
+        modoEdicao
+            ? "Salvando alterações..."
+            : "Criando orçamento...";
+
+
+    try {
+
+        /* ============================
+           EDITAR
+        ============================ */
+
+        if (modoEdicao) {
+
+            await atualizarOrcamento(
+                dados,
+                itens
             );
 
+        }
 
-        const pagamento =
-            document.getElementById(
-                "pagamento"
-            ).value.trim();
+        /* ============================
+           NOVO ORÇAMENTO
+        ============================ */
 
+        else {
 
-        const observacoes =
-            document.getElementById(
-                "observacoes"
-            ).value.trim();
-
-
-        /* VALIDAÇÕES */
-
-
-        if (!clienteId) {
-
-
-            mostrarMensagem(
-                "Selecione um cliente.",
-                "error"
+            await criarNovoOrcamento(
+                dados,
+                itens
             );
-
-
-            return;
 
         }
 
 
-        if (!titulo) {
+        setTimeout(
+            function() {
+
+                window.location.href =
+                    "orcamentos.html";
+
+            },
+            900
+        );
 
 
-            mostrarMensagem(
-                "Digite o título do orçamento.",
-                "error"
+    } catch (error) {
+
+        console.error(
+            "Erro ao salvar orçamento:",
+            error
+        );
+
+
+        console.error(
+            "Erro completo do Supabase:",
+            {
+                message:
+                    error?.message,
+
+                details:
+                    error?.details,
+
+                hint:
+                    error?.hint,
+
+                code:
+                    error?.code
+            }
+        );
+
+
+        const textoErro =
+            String(
+                error?.message || ""
+            ) +
+            " " +
+            String(
+                error?.details || ""
+            ) +
+            " " +
+            String(
+                error?.hint || ""
             );
 
 
-            return;
-
-        }
-
-
-        const itens =
-            pegarItens();
-
+        /* ============================
+           LIMITE DO PLANO GRATUITO
+        ============================ */
 
         if (
-            !itens ||
-            itens.length === 0
+            textoErro.includes(
+                "FREE_PLAN_QUOTE_LIMIT_REACHED"
+            )
         ) {
 
-
             mostrarMensagem(
-                "Preencha corretamente os itens do orçamento.",
-                "error"
-            );
-
-
-            return;
-
-        }
-
-
-        const totais =
-            calcularTotais();
-
-
-        const dados = {
-
-            client_id:
-                clienteId,
-
-            title:
-                titulo,
-
-            description:
-                descricao,
-
-            subtotal:
-                totais.subtotal,
-
-            discount:
-                totais.desconto,
-
-            total:
-                totais.total,
-
-            validity_days:
-                validade,
-
-            payment_method:
-                pagamento,
-
-            notes:
-                observacoes
-
-        };
-
-
-        salvarBtn.disabled =
-            true;
-
-
-        salvarBtn.textContent =
-            modoEdicao
-                ? "Salvando alterações..."
-                : "Criando orçamento...";
-
-
-        try {
-
-
-            if (modoEdicao) {
-
-
-                await atualizarOrcamento(
-                    dados,
-                    itens
-                );
-
-
-            } else {
-
-
-                await criarNovoOrcamento(
-                    dados,
-                    itens
-                );
-
-            }
-
-
-            setTimeout(
-                function() {
-
-
-                    window.location.href =
-                        "orcamentos.html";
-
-                },
-                900
-            );
-
-
-        } catch (error) {
-
-
-            console.error(
-                "Erro ao salvar orçamento:",
-                error
-            );
-
-
-            mostrarMensagem(
-                "Não foi possível salvar: " +
-                error.message,
+                "Você atingiu o limite de 5 orçamentos do plano Gratuito neste mês. Para continuar criando novos orçamentos, faça upgrade para o OrçaZap Pro.",
                 "error"
             );
 
@@ -2848,13 +2887,39 @@
 
 
             salvarBtn.textContent =
-                modoEdicao
-                    ? "Salvar alterações"
-                    : "Salvar orçamento";
+                "Salvar orçamento";
 
+
+            return;
         }
 
+
+        /* ============================
+           OUTROS ERROS
+        ============================ */
+
+        mostrarMensagem(
+            "Não foi possível salvar o orçamento: " +
+            (
+                error?.message ||
+                "Erro desconhecido."
+            ),
+            "error"
+        );
+
+
+        salvarBtn.disabled =
+            false;
+
+
+        salvarBtn.textContent =
+            modoEdicao
+                ? "Salvar alterações"
+                : "Salvar orçamento";
+
     }
+
+}
 
 
     /* ============================================
