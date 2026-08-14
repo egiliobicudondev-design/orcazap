@@ -595,6 +595,108 @@
         }
 
 
+
+        /* ==================================
+           MODAL LIMITE DO PLANO
+        ================================== */
+
+        .limit-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 30, 22, 0.55);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .limit-modal.show {
+            display: flex;
+        }
+
+        .limit-modal-box {
+            width: 100%;
+            max-width: 430px;
+            background: white;
+            border-radius: 18px;
+            padding: 32px;
+            text-align: center;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, .20);
+            animation: modalEntrada .2s ease;
+        }
+
+        @keyframes modalEntrada {
+            from {
+                opacity: 0;
+                transform: translateY(15px) scale(.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .limit-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            background: #fff1f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 27px;
+        }
+
+        .limit-modal-box h2 {
+            font-size: 23px;
+            margin-bottom: 12px;
+            color: #13261d;
+        }
+
+        .limit-modal-box p {
+            color: #5d7167;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .limit-extra {
+            margin-top: 10px;
+        }
+
+        .limit-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .limit-buttons button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 9px;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .limit-close {
+            background: white;
+            border: 1px solid #d8e4dd;
+            color: #42594e;
+        }
+
+        .limit-pro {
+            border: none;
+            background: #08a865;
+            color: white;
+        }
+
+        .limit-pro:hover {
+            background: #078c55;
+        }
+
         /* ==================================
            RESPONSIVO
         ================================== */
@@ -636,6 +738,10 @@
         @media(
             max-width: 600px
         ) {
+
+            .limit-buttons {
+                flex-direction: column-reverse;
+            }
 
             main {
 
@@ -1179,6 +1285,63 @@
 
 </div>
 
+
+
+<!-- MODAL LIMITE DO PLANO -->
+
+<div
+    id="limitModal"
+    class="limit-modal"
+    aria-hidden="true"
+>
+    <div
+        class="limit-modal-box"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="limitModalTitle"
+    >
+
+        <div class="limit-icon">
+            🚫
+        </div>
+
+        <h2 id="limitModalTitle">
+            Limite do plano atingido
+        </h2>
+
+        <p>
+            Você já utilizou os
+            <strong>5 orçamentos</strong>
+            disponíveis no plano Gratuito neste mês.
+        </p>
+
+        <p class="limit-extra">
+            Para continuar criando novos orçamentos,
+            conheça o OrçaZap Pro.
+        </p>
+
+        <div class="limit-buttons">
+
+            <button
+                type="button"
+                class="limit-close"
+                onclick="fecharModalLimite()"
+            >
+                Agora não
+            </button>
+
+            <button
+                type="button"
+                class="limit-pro"
+                onclick="conhecerPro()"
+            >
+                🚀 Conhecer o Pro
+            </button>
+
+        </div>
+
+    </div>
+</div>
 
 <script
     src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
@@ -2876,10 +3039,7 @@
             )
         ) {
 
-            mostrarMensagem(
-                "Você atingiu o limite de 5 orçamentos do plano Gratuito neste mês. Para continuar criando novos orçamentos, faça upgrade para o OrçaZap Pro.",
-                "error"
-            );
+            abrirModalLimite();
 
 
             salvarBtn.disabled =
@@ -2920,6 +3080,101 @@
     }
 
 }
+
+
+
+    /* ============================================
+       MODAL LIMITE DO PLANO
+    ============================================ */
+
+    function abrirModalLimite() {
+
+        const modal =
+            document.getElementById(
+                "limitModal"
+            );
+
+
+        modal.classList.add(
+            "show"
+        );
+
+
+        modal.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+    }
+
+
+    function fecharModalLimite() {
+
+        const modal =
+            document.getElementById(
+                "limitModal"
+            );
+
+
+        modal.classList.remove(
+            "show"
+        );
+
+
+        modal.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+    }
+
+
+    function conhecerPro() {
+
+        fecharModalLimite();
+
+
+        alert(
+            "A página do OrçaZap Pro será adicionada na próxima etapa. 🚀"
+        );
+
+    }
+
+
+    document.getElementById(
+        "limitModal"
+    ).addEventListener(
+        "click",
+        function(event) {
+
+            if (
+                event.target ===
+                this
+            ) {
+
+                fecharModalLimite();
+
+            }
+
+        }
+    );
+
+
+    document.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key ===
+                "Escape"
+            ) {
+
+                fecharModalLimite();
+
+            }
+
+        }
+    );
 
 
     /* ============================================
@@ -2982,7 +3237,6 @@
 
 
 </script>
-
 
 </body>
 
